@@ -2,7 +2,7 @@
 
 <?php
 
-require('../vendor/docopt/docopt/src/docopt.php');
+require __DIR__ . '/../vendor/docopt/docopt/src/docopt.php';
 
 $doc = <<<DOC
 Generate diff

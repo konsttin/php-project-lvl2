@@ -18,13 +18,13 @@ function genDiff($firstFile, $secondFile)
                 $result[] = '+ ' . $file2[$key2];
             }
             if ($key1 === $key2 && $value1 === $value2) {
-                $result[] = $file1[$key1];
+                $result[] = $value1;
             }
             if ($key1 === $key2 && $value1 !== $value2) {
-                $result[] = '- ' . $file1[$key1] . \n . '+ ' . $file1[$key2];
+                $result[] = '- ' . $value1 . "\n" . '+ ' . $file1[$key2];
             }
-    }
-    print_r($result);
-    return $result;
+        }
+        print_r($result);
+        return $result;
     }
 }
