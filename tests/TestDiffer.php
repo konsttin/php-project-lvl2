@@ -1,10 +1,8 @@
 <?php
 
-namespace App\Tests;
-
 use PHPUnit\Framework\TestCase;
 
-use function src\Differ\genDiff;
+use function Hexlet\Code\Differ\genDiff;
 
 class TestDiffer extends TestCase
 {
@@ -22,6 +20,7 @@ class TestDiffer extends TestCase
   "verbose": true,
   "host": "hexlet.io"
 }';
+
         $this->assertEquals('{
   - follow: false
     host: hexlet.io
