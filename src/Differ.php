@@ -17,16 +17,16 @@ function genDiff($firstFile, $secondFile)
             $merge[$key] = $merge[$key] ? 'true' : 'false';
         }
         if (!array_key_exists($key, $file2)) {
-            return '- ' . $key . ': ' . $merge[$key];
+            return '  - ' . $key . ': ' . $merge[$key];
         }
         if (!array_key_exists($key, $file1)) {
-            return '+ ' . $key . ': ' . $merge[$key];
+            return '  + ' . $key . ': ' . $merge[$key];
         }
         if (array_key_exists($key, $file1) && array_key_exists($key, $file2)) {
             if ($file1[$key] === $file2[$key]) {
-                return '  ' . $key . ': ' . $merge[$key];
+                return '    ' . $key . ': ' . $merge[$key];
             }
-            return '- ' . $key . ': ' . $file1[$key] . "\n " . '+ ' . $key . ': ' . $file2[$key];
+            return '  - ' . $key . ': ' . $file1[$key] . "\n" . '  + ' . $key . ': ' . $file2[$key];
         }
     }, array: $keys);
     $string = implode("\n", $mapped);
