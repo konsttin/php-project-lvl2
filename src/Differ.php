@@ -30,5 +30,5 @@ function genDiff($firstFile, $secondFile)
         }
     }, array: $keys);
     $string = implode("\n", $mapped);
-    return '{\n' . $string . '}';
+    return '{' . "\n" . $string . "\n" . '}';
 }
