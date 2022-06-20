@@ -1,17 +1,16 @@
 <?php
 
-namespace Hexlet\Code\Differ;
+namespace Hexlet\Code;
 
 function genDiff($firstFile, $secondFile)
 {
     $file1 = json_decode($firstFile, true, 512, JSON_THROW_ON_ERROR);
     $file2 = json_decode($secondFile, true, 512, JSON_THROW_ON_ERROR);
 
-    //$result = [];
-
     $merge = array_merge($file1, $file2);
     $keys = array_keys($merge);
     sort($keys);
+
     $mapped = array_map(callback: static function ($key) use ($merge, $file1, $file2) {
         if (is_bool($merge[$key])) {
             $merge[$key] = $merge[$key] ? 'true' : 'false';
