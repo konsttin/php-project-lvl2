@@ -4,8 +4,14 @@ namespace Hexlet\Code;
 
 function genDiff($firstFile, $secondFile)
 {
-    $file1 = json_decode($firstFile, true, 512, JSON_THROW_ON_ERROR);
-    $file2 = json_decode($secondFile, true, 512, JSON_THROW_ON_ERROR);
+    try {
+        $file1 = json_decode($firstFile, true, 512, JSON_THROW_ON_ERROR);
+    } catch (\JsonException $e) {
+    }
+    try {
+        $file2 = json_decode($secondFile, true, 512, JSON_THROW_ON_ERROR);
+    } catch (\JsonException $e) {
+    }
 
     $merge = array_merge($file1, $file2);
     $keys = array_keys($merge);
