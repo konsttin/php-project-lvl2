@@ -20,14 +20,8 @@ class DifferTest extends TestCase
   "verbose": true,
   "host": "hexlet.io"
 }';
+        $result = file_get_contents(__DIR__ . "/../fixtures/result.php");
 
-        $this->assertEquals('{
-  - follow: false
-    host: hexlet.io
-  - proxy: 123.234.53.22
-  - timeout: 50
-  + timeout: 20
-  + verbose: true
-}', genDiff($firstFile, $secondFile));
+        $this->assertEquals($result, genDiff($firstFile, $secondFile));
     }
 }
