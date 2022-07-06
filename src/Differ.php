@@ -5,8 +5,8 @@ namespace Hexlet\Code;
 function genDiff($firstFile, $secondFile)
 {
     //var_dump(__DIR__ . '/../' . $firstFile);
-    $contentOfFirstFile = file_get_contents(__DIR__ . '/../tests/' . $firstFile);
-    $contentOfSecondFile = file_get_contents(__DIR__ . '/../tests/' . $secondFile);
+    $contentOfFirstFile = file_get_contents(__DIR__ . '/../' . $firstFile);
+    $contentOfSecondFile = file_get_contents(__DIR__ . '/../' . $secondFile);
     //var_dump($contentOfFirstFile);
     //var_dump($contentOfSecondFile);
     try {
