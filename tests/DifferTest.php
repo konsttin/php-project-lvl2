@@ -10,6 +10,6 @@ class DifferTest extends TestCase
     {
         $result = file_get_contents(__DIR__ . '/../tests/fixtures/result');
 
-        $this->assertEquals($result, genDiff('fixtures/file1.json', 'fixtures/file2.json'));
+        $this->assertEquals($result, genDiff('/tests/fixtures/file1.json', '/tests/fixtures/file2.json'));
     }
 }
