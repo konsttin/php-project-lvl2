@@ -8,20 +8,8 @@ class DifferTest extends TestCase
 {
     public function testDiffer()
     {
-        $firstFile = '{
-  "host": "hexlet.io",
-  "timeout": 50,
-  "proxy": "123.234.53.22",
-  "follow": false
-}';
+        $result = file_get_contents(__DIR__ . '/../tests/fixtures/result');
 
-        $secondFile = '{
-  "timeout": 20,
-  "verbose": true,
-  "host": "hexlet.io"
-}';
-        $result = file_get_contents(__DIR__ . "/../fixtures/result.php");
-
-        $this->assertEquals($result, genDiff($firstFile, $secondFile));
+        $this->assertEquals($result, genDiff('fixtures/file1.json', 'fixtures/file2.json'));
     }
 }
