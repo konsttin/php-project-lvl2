@@ -2,22 +2,20 @@
 
 namespace Hexlet\Code;
 
-function genDiff($firstFile, $secondFile)
+function genDiff(string $firstFile, string $secondFile): string
 {
-    //var_dump(__DIR__ . '/../' . $firstFile);
     $contentOfFirstFile = file_get_contents(__DIR__ . '/../' . $firstFile);
     $contentOfSecondFile = file_get_contents(__DIR__ . '/../' . $secondFile);
-    //var_dump($contentOfFirstFile);
-    //var_dump($contentOfSecondFile);
+
     try {
-        $file1 = json_decode($contentOfFirstFile, true, 512, JSON_THROW_ON_ERROR);
+        $file1 = json_decode(json: $contentOfFirstFile, associative: true, depth: 512, flags: JSON_THROW_ON_ERROR);
     } catch (\JsonException $e) {
     }
     try {
-        $file2 = json_decode($contentOfSecondFile, true, 512, JSON_THROW_ON_ERROR);
+        $file2 = json_decode(json: $contentOfSecondFile, associative: true, depth: 512, flags: JSON_THROW_ON_ERROR);
     } catch (\JsonException $e) {
     }
-    //var_dump($file1);
+
     $merge = array_merge($file1, $file2);
     $keys = array_keys($merge);
     sort($keys);
@@ -32,12 +30,10 @@ function genDiff($firstFile, $secondFile)
         if (!array_key_exists($key, $file1)) {
             return '  + ' . $key . ': ' . $merge[$key];
         }
-        if (array_key_exists($key, $file1) && array_key_exists($key, $file2)) {
-            if ($file1[$key] === $file2[$key]) {
-                return '    ' . $key . ': ' . $merge[$key];
-            }
-            return '  - ' . $key . ': ' . $file1[$key] . "\n" . '  + ' . $key . ': ' . $file2[$key];
+        if ($file1[$key] === $file2[$key]) {
+            return '    ' . $key . ': ' . $merge[$key];
         }
+        return '  - ' . $key . ': ' . $file1[$key] . "\n" . '  + ' . $key . ': ' . $file2[$key];
     }, array: $keys);
     $string = implode("\n", $mapped);
     $result = '{' . "\n" . $string . "\n" . '}';
