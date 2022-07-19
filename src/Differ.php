@@ -2,16 +2,18 @@
 
 namespace Hexlet\Code;
 
+use Exception;
+
 function genDiff(string $firstFile, string $secondFile): string
 {
     $contentOfFirstFile = file_get_contents(__DIR__ . '/../' . $firstFile);
     if ($contentOfFirstFile === false) {
-        throw new \Exception();
+        throw new Exception();
     }
 
     $contentOfSecondFile = file_get_contents(__DIR__ . '/../' . $secondFile);
     if ($contentOfSecondFile === false) {
-        throw new \Exception();
+        throw new Exception();
     }
 
     $decodedFirstFile = json_decode($contentOfFirstFile, true, JSON_THROW_ON_ERROR, JSON_THROW_ON_ERROR);
