@@ -12,7 +12,8 @@
         }
     ],
     "require": {
-        "docopt/docopt": "^1.0"
+        "docopt/docopt": "^1.0",
+        "squizlabs/php_codesniffer": "*"
     },
     "require-dev": {
         "roave/security-advisories": "dev-latest",
