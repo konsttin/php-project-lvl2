@@ -2,7 +2,7 @@
 
 namespace src\Parser;
 
-function parser($decodedFirstFile, $decodedSecondFile): string
+function parser(mixed $decodedFirstFile, mixed $decodedSecondFile): string
 {
     $merge = array_merge($decodedFirstFile, $decodedSecondFile);
     $keys = array_keys($merge);

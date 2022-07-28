@@ -11,12 +11,12 @@ class DifferTest extends TestCase
     /**
      * @dataProvider additionProvider
      */
-    public function testDiffer($filePath1, $filePath2, $expected): void
+    public function testDiffer(string $filePath1, string $filePath2, string $expected): void
     {
         $this->assertEquals($expected, genDiff($filePath1, $filePath2));
     }
 
-    public function additionProvider()
+    public function additionProvider(): mixed
     {
         $result = file_get_contents(__DIR__ . '/../tests/fixtures/result');
         return [

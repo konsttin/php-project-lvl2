@@ -3,6 +3,7 @@
 namespace Hexlet\Code;
 
 use Exception;
+
 use function src\Parser\parser;
 
 function genDiff(string $firstFile, string $secondFile): string
