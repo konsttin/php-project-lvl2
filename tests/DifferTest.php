@@ -8,10 +8,20 @@ use function Hexlet\Code\genDiff;
 
 class DifferTest extends TestCase
 {
-    public function testDiffer(): void
+    /**
+     * @dataProvider additionProvider
+     */
+    public function testDiffer($filePath1, $filePath2, $expected): void
+    {
+        $this->assertEquals($expected, genDiff($filePath1, $filePath2));
+    }
+
+    public function additionProvider()
     {
         $result = file_get_contents(__DIR__ . '/../tests/fixtures/result');
-
-        $this->assertEquals($result, genDiff('tests/fixtures/file1.json', 'tests/fixtures/file2.json'));
+        return [
+            'json' => ['tests/fixtures/file1.json', 'tests/fixtures/file2.json', $result],
+            'yml' => ['tests/fixtures/file1.yml', 'tests/fixtures/file2.yml', $result],
+        ];
     }
 }

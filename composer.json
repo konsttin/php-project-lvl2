@@ -2,7 +2,8 @@
     "name": "hexlet/code",
     "autoload": {
         "files": [
-            "src/Differ.php"
+            "src/Differ.php",
+            "src/Parser.php"
         ]
     },
     "authors": [
