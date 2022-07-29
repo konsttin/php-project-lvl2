@@ -1,6 +1,6 @@
 <?php
 
-namespace Differ\Tests;
+//namespace Differ\Tests;
 
 use PHPUnit\Framework\TestCase;
 
@@ -21,7 +21,7 @@ class DifferTest extends TestCase
         $result = file_get_contents(__DIR__ . '/../tests/fixtures/result');
         return [
             'json' => ['tests/fixtures/file1.json', 'tests/fixtures/file2.json', $result],
-            'yml' => ['tests/fixtures/file1.yml', 'tests/fixtures/file2.yml', $result],
+            'yml' => ['tests/fixtures/file1.yml', 'tests/fixtures/file2.yaml', $result],
         ];
     }
 }

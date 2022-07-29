@@ -3,10 +3,11 @@
 namespace Hexlet\Code;
 
 use Exception;
+use Symfony\Component\Yaml\Yaml;
 
 use function src\Parser\parser;
 
-function fileDecode($filePath): mixed
+function fileDecode(string $filePath): mixed
 {
     $path = __DIR__ . '/../' . $filePath;
 
@@ -14,15 +15,17 @@ function fileDecode($filePath): mixed
 
     $contentOfFile = file_get_contents($path);
     if ($contentOfFile === false) {
-        throw new Exception();
+        throw new Exception('File is empty');
     }
 
     switch ($extension) {
         case 'json':
             $decodedFile = json_decode($contentOfFile, true, JSON_THROW_ON_ERROR, JSON_THROW_ON_ERROR);
             break;
-        case 'yml' || 'yaml':
-            $decodedFile = yaml_parse_file($contentOfFile);
+        case 'yaml':
+        case 'yml':
+            $stdClass = Yaml::parse($contentOfFile, Yaml::PARSE_OBJECT_FOR_MAP);
+            $decodedFile = (array)$stdClass;
             break;
         default:
             throw new Exception('Unexpected extension');
@@ -32,18 +35,6 @@ function fileDecode($filePath): mixed
 
 function genDiff(string $firstFile, string $secondFile): string
 {
-//    $contentOfFirstFile = file_get_contents(__DIR__ . '/../' . $firstFile);
-//    if ($contentOfFirstFile === false) {
-//        throw new Exception();
-//    }
-//
-//    $contentOfSecondFile = file_get_contents(__DIR__ . '/../' . $secondFile);
-//    if ($contentOfSecondFile === false) {
-//        throw new Exception();
-//    }
-//
-//    $decodedFirstFile = json_decode($contentOfFirstFile, true, JSON_THROW_ON_ERROR, JSON_THROW_ON_ERROR);
-//    $decodedSecondFile = json_decode($contentOfSecondFile, true, JSON_THROW_ON_ERROR, JSON_THROW_ON_ERROR);
     $decodedFirstFile = fileDecode($firstFile);
     $decodedSecondFile = fileDecode($secondFile);
 
