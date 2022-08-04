@@ -2,6 +2,8 @@
 
 namespace src\Parser;
 
+use function src\Stylish\stylish;
+
 function parser(mixed $decodedFirstFile, mixed $decodedSecondFile): string
 {
     $merge = array_merge($decodedFirstFile, $decodedSecondFile);
@@ -23,8 +25,5 @@ function parser(mixed $decodedFirstFile, mixed $decodedSecondFile): string
         }
         return '  - ' . $key . ': ' . $decodedFirstFile[$key] . "\n" . '  + ' . $key . ': ' . $decodedSecondFile[$key];
     }, array: $keys);
-    $string = implode("\n", $mapped);
-    $result = '{' . "\n" . $string . "\n" . '}';
-    print_r($result);
-    return $result;
+    return stylish($mapped);
 }
