@@ -3,8 +3,7 @@
     "autoload": {
         "files": [
             "src/Differ.php",
-            "src/Parser.php",
-            "src/Stylish.php"
+            "src/Parser.php"
         ]
     },
     "authors": [
