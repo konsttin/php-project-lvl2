@@ -12,47 +12,58 @@ function parser(mixed $decodedFirstFile, mixed $decodedSecondFile): string
         if (is_bool($merge[$key])) {
             $merge[$key] = $merge[$key] ? 'true' : 'false';
         }
-        if (is_array($decodedFirstFile[$key]) && is_array($decodedSecondFile[$key])) {
-            return ['node' =>
-                ['status' => 'unchanged',
-                'key' => $key,
-                'value' => parser($decodedFirstFile[$key], $decodedSecondFile[$key])]
-            ];
-        }
-        if ($decodedFirstFile[$key] === $decodedSecondFile[$key]) {
-            return ['sheet' => ['status' => 'unchanged', 'key' => $key, 'value' => $merge[$key]]];
-        }
+
         if (!array_key_exists($key, $decodedSecondFile)) {
-            return ['sheet' => ['status' => 'removed', 'key' => $key, 'value' => $merge[$key]]];
+            return ['changed' => ['type' => 'sheet', 'key' => $key, 'oldValue' => $merge[$key]]];
         }
         if (!array_key_exists($key, $decodedFirstFile)) {
-            return ['sheet' => ['status' => 'added', 'key' => $key, 'value' => $merge[$key]]];
+            return ['changed' => ['type' => 'sheet', 'key' => $key, 'newValue' => $merge[$key]]];
         }
-        return [
-            ['sheet' => ['status' => 'removed', 'key' => $key, 'value' => $decodedFirstFile[$key]]],
-            ['sheet' => ['status' => 'added', 'key' => $key, 'value' => $decodedSecondFile[$key]]]
+        if ($decodedFirstFile[$key] === $decodedSecondFile[$key]) {
+            if (is_array($merge[$key])) {
+                return ['unchanged' =>
+                    ['type' => 'node',
+                        'key' => $key,
+                        'children' => parser($decodedFirstFile[$key], $decodedSecondFile[$key])]];
+            }
+            return ['unchanged' => ['type' => 'sheet', 'key' => $key, 'value' => $merge[$key]]];
+        }
+        return ['changed' =>
+            ['type' => 'sheet',
+                'key' => $key,
+                'oldValue' => $decodedFirstFile[$key],
+                'newValue' => $decodedSecondFile[$key]]
         ];
     }, array: $keys);
+    //print_r($diff);
     return stylish($diff);
 }
 
-function stylish(array $fileDiff): string
+function stylish(mixed $fileDiff): string
 {
-    $mapped = array_map(callback: static function ($key) use ($fileDiff) {
-        if ($key === 'node') {
-            return '    ' . $key . ': ' . stylish($fileDiff[$key]);
-        }
-        if (key($fileDiff) === 'sheet' && $fileDiff[$key][1] = 'removed') {
-            return '  - ' . $key . ': ' . $fileDiff[$key];
-        }
-        if (key($fileDiff) === 'sheet' && $fileDiff[$key][1] = 'added') {
-            return '  + ' . $key . ': ' . $fileDiff[$key];
-        }
-        return '    ' . $key . ': ' . $fileDiff[$key];
-    }, array: $fileDiff);
+    $iter = static function (array $node, int $depth) use (&$iter) {
+        $mapped = array_map(static function ($value) use ($iter, $depth) {
+            $indent = str_repeat('  ', $depth);
 
-    $string = implode("\n", $mapped);
-    $result = '{' . "\n" . $string . "\n" . '}';
-    print_r($result);
-    return $result;
+            if (isset($value['unchanged'])) {
+                if ($value['unchanged']['type'] === 'node') {
+                    return "{$indent}{$indent}{$value['unchanged']['key']}: {$iter($value, $depth + 1)}";
+                }
+                return "{$indent}{$indent}{$value['unchanged']['key']}: {$value['unchanged']['value']}";
+            }
+            if (isset($value['changed']['oldValue']) && !isset($value['changed']['newValue'])) {
+                return "{$indent}- {$value['changed']['key']}: {$value['changed']['oldValue']}";
+            }
+            if (isset($value['changed']['oldValue'], $value['changed']['newValue'])) {
+                return $indent . "- " . $value['changed']['key'] . ": " . $value['changed']['oldValue'] . "\n" .
+                    $indent . "+ " . $value['changed']['key'] . ": " . $value['changed']['newValue'];
+            }
+            return "{$indent}+ {$value['changed']['key']}: {$value['changed']['newValue']}";
+        }, $node);
+        //print_r($mapped);
+        $string = implode("\n", $mapped);
+        return '{' . "\n" . $string . "\n" . '}';
+    };
+
+    return $iter($fileDiff, 1);
 }
