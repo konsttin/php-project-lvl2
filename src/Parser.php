@@ -15,14 +15,16 @@ function parser(mixed $decodedFirstFile, mixed $decodedSecondFile): string
 
         if (!array_key_exists($key, $decodedSecondFile)) {
             if (is_array($decodedFirstFile[$key])) {
-                return ['changed' => ['type' => 'node', 'oldKey' => $key, 'children' => $diff($decodedFirstFile[$key])]];
+                return ['changed' =>
+                    ['type' => 'node', 'oldKey' => $key, 'children' => $diff($decodedFirstFile[$key])]];
             }
             return ['changed' => ['type' => 'sheet', 'oldKey' => $key, 'oldValue' => $merge[$key]]];
         }
 
         if (!array_key_exists($key, $decodedFirstFile)) {
             if (is_array($decodedSecondFile[$key])) {
-                return ['changed' => ['type' => 'node', 'newKey' => $key, 'children' => $diff($decodedSecondFile[$key])]];
+                return ['changed' =>
+                    ['type' => 'node', 'newKey' => $key, 'children' => $diff($decodedSecondFile[$key])]];
             }
             return ['changed' => ['type' => 'sheet', 'newKey' => $key, 'newValue' => $merge[$key]]];
         }
