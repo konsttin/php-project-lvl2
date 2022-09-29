@@ -8,7 +8,7 @@ function parser(mixed $decodedFirstFile, mixed $decodedSecondFile): string
     $keys = array_keys($merge);
     sort($keys);
 
-    $diff = array_map(callback: static function ($key) use (&$diff, $merge, $decodedFirstFile, $decodedSecondFile) {
+    $diff = fn($keys) => array_map(callback: static function ($key) use (&$diff, $merge, $decodedFirstFile, $decodedSecondFile) {
         if (is_bool($merge[$key])) {
             $merge[$key] = trim(var_export($merge[$key], true), "'");
         }
