@@ -8,48 +8,48 @@ function parser(mixed $decodedFirstFile, mixed $decodedSecondFile): string
     $keys = array_keys($merge);
     sort($keys);
 
-    $diff = function ($keys) use (&$diff, $merge, $decodedFirstFile, $decodedSecondFile) {
-        return array_map(callback: static function ($key) use (&$diff, $merge, $decodedFirstFile, $decodedSecondFile) {
-            if (is_bool($merge[$key])) {
-                $merge[$key] = trim(var_export($merge[$key], true), "'");
-            }
+    $diff = fn($keys) => array_map(callback: static function ($key) use (&$diff, $merge, $decodedFirstFile, $decodedSecondFile) {
+        if (!is_string($merge[$key])) {
+            $merge[$key] = trim(var_export($merge[$key], true), "'");
+        }
 
-            if (!array_key_exists($key, $decodedSecondFile)) {
-                if (is_array($decodedFirstFile[$key])) {
-                    return ['changed' =>
-                        ['type' => 'node', 'oldKey' => $key, 'children' => $diff($decodedFirstFile[$key])]];
-                }
-                return ['changed' => ['type' => 'sheet', 'oldKey' => $key, 'oldValue' => $merge[$key]]];
+        if (!array_key_exists($key, $decodedSecondFile)) {
+            if (is_array($decodedFirstFile[$key])) {
+                return ['changed' =>
+                    ['type' => 'node', 'oldKey' => $key, 'children' => $diff($merge[$key])]];
             }
+            return ['changed' => ['type' => 'sheet', 'oldKey' => $key, 'oldValue' => $merge[$key]]];
+        }
 
-            if (!array_key_exists($key, $decodedFirstFile)) {
-                if (is_array($decodedSecondFile[$key])) {
-                    return ['changed' =>
-                        ['type' => 'node', 'newKey' => $key, 'children' => $diff($decodedSecondFile[$key])]];
-                }
-                return ['changed' => ['type' => 'sheet', 'newKey' => $key, 'newValue' => $merge[$key]]];
+        if (!array_key_exists($key, $decodedFirstFile)) {
+            if (is_array($decodedSecondFile[$key])) {
+                return ['changed' =>
+                    ['type' => 'node', 'newKey' => $key, 'children' => $diff($merge[$key])]];
             }
+            return ['changed' => ['type' => 'sheet', 'newKey' => $key, 'newValue' => $merge[$key]]];
+        }
 
-            if ($decodedFirstFile[$key] === $decodedSecondFile[$key]) {
-                if (is_array($decodedFirstFile[$key])) {
-                    return ['unchanged' => ['type' => 'node', 'key' => $key, 'children' => $diff($decodedFirstFile[$key])]];
-                }
-                return ['unchanged' => ['type' => 'sheet', 'key' => $key, 'value' => $merge[$key]]];
+        if ($decodedFirstFile[$key] === $decodedSecondFile[$key]) {
+            if (is_array($decodedFirstFile[$key])) {
+                return ['unchanged' => ['type' => 'node', 'key' => $key, 'children' => $diff($merge[$key])]];
             }
+            return ['unchanged' => ['type' => 'sheet', 'key' => $key, 'value' => $merge[$key]]];
+        }
 
-            if (is_array($merge[$key])) {
-                return ['changed' => ['type' => 'node', 'key' => $key, 'children' => $diff($merge[$key])]];
-            }
+        if (is_array($merge[$key])) {
+            return ['changed' => ['type' => 'node', 'key' => $key, 'children' => $diff($merge[$key])]];
+        }
 
-            return ['changed' =>
-                ['type' => 'sheet',
-                    'key' => $key,
-                    'oldValue' => $decodedFirstFile[$key],
-                    'newValue' => $decodedSecondFile[$key]]];
-        }, array: $keys);
-    };
-    print_r($diff);
-    return stylish($diff);
+        return ['changed' =>
+            ['type' => 'sheet',
+                'key' => $key,
+                'oldValue' => $decodedFirstFile[$key],
+                'newValue' => $decodedSecondFile[$key]]];
+    }, array: $keys);
+
+    $result = $diff($keys);
+    print_r($result);
+    return stylish($result);
 }
 
 function stylish(mixed $fileDiff): string
