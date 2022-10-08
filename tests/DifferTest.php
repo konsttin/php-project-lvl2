@@ -22,9 +22,9 @@ class DifferTest extends TestCase
         $result2 = file_get_contents(__DIR__ . '/../tests/fixtures/result2');
         return [
             'json' => ['tests/fixtures/file1.json', 'tests/fixtures/file2.json', $result],
-            //'yml' => ['tests/fixtures/file1.yml', 'tests/fixtures/file2.yaml', $result],
+            'yml' => ['tests/fixtures/file1.yml', 'tests/fixtures/file2.yaml', $result],
             'json2' => ['tests/fixtures/file3.json', 'tests/fixtures/file4.json', $result2],
-            //'yml2' => ['tests/fixtures/file3.yml', 'tests/fixtures/file4.yaml', $result2]
+            'yml2' => ['tests/fixtures/file3.yml', 'tests/fixtures/file4.yaml', $result2]
         ];
     }
 }
