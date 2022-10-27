@@ -13,6 +13,7 @@ function stylish(array $fileDiff): string
     $iter = static function (array $node, int $depth) use (&$iter) {
         $mapped = array_map(static function ($value) use ($iter, $depth) {
             $indent = str_repeat('  ', $depth);
+            $indent2 = str_repeat('  ', $depth - 1);
 
             if ($value['status'] === 'unchanged' || $value['status'] === 'nested') {
                 if ($value['type'] === 'node') {
@@ -23,27 +24,27 @@ function stylish(array $fileDiff): string
 
             if ($value['status'] === 'deleted') {
                 if ($value['type'] === 'node') {
-                    return "$indent- {$value['oldKey']}: {$iter($value['children'], $depth + 1)}";
+                    return "$indent$indent2- {$value['oldKey']}: {$iter($value['children'], $depth + 1)}";
                 }
-                return "$indent- {$value['oldKey']}: {$value['oldValue']}";
+                return "$indent$indent2- {$value['oldKey']}: {$value['oldValue']}";
             }
 
             if ($value['status'] === 'added') {
                 if ($value['type'] === 'node') {
-                    return "$indent+ {$value['newKey']}: {$iter($value['children'], $depth + 1)}";
+                    return "$indent$indent2+ {$value['newKey']}: {$iter($value['children'], $depth + 1)}";
                 }
-                return "$indent+ {$value['newKey']}: {$value['newValue']}";
+                return "$indent$indent2+ {$value['newKey']}: {$value['newValue']}";
             }
 
             if ($value['status'] === 'changed') {
                 if (!empty($value['oldType'])) {
-                    return $indent . "- " . $value['key'] . ": " . $iter($value['oldChildren'], $depth + 1) . "\n" .
-                        $indent . "+ " . $value['key'] . ": " . $value['newValue'];
+                    return $indent . $indent2 . "- " . $value['key'] . ": " . $iter($value['oldChildren'], $depth + 1) . "\n" .
+                        $indent . $indent2 . "+ " . $value['key'] . ": " . $value['newValue'];
                 }
 
                 if (!empty($value['newType'])) {
-                    return $indent . "- " . $value['key'] . ": " . $value['oldValue'] . "\n" .
-                        $indent . "+ " . $value['key'] . ": " . $iter($value['newChildren'], $depth + 1);
+                    return $indent . $indent2 . "- " . $value['key'] . ": " . $value['oldValue'] . "\n" .
+                        $indent . $indent2 . "+ " . $value['key'] . ": " . $iter($value['newChildren'], $depth + 1);
                 }
 
                 if ($value['type'] === 'node') {
@@ -51,13 +52,13 @@ function stylish(array $fileDiff): string
                 }
             }
 
-            return $indent . "- " . $value['key'] . ": " . $value['oldValue'] . "\n" .
-                $indent . "+ " . $value['key'] . ": " . $value['newValue'];
+            return $indent . $indent2 . "- " . $value['key'] . ": " . $value['oldValue'] . "\n" .
+                $indent . $indent2 . "+ " . $value['key'] . ": " . $value['newValue'];
 
         }, $node);
         //print_r($mapped);
         $string = implode("\n", $mapped);
-        $bracketIndent = str_repeat('  ', $depth - 1);
+        $bracketIndent = str_repeat('  ', ($depth - 1) * 2);
         return '{' . "\n" . $string . "\n" . $bracketIndent . '}';
     };
 
@@ -66,7 +67,7 @@ function stylish(array $fileDiff): string
 
 function toString($value): string
 {
-    return trim(var_export($value, true), "'");
+    return strtolower(trim(var_export($value, true), "'"));
 }
 
 function diff($decodedFirstFile, $decodedSecondFile = false): array
