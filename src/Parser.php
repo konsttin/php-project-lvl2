@@ -16,23 +16,23 @@ function stylish(array $fileDiff): string
 
             if ($value['status'] === 'unchanged' || $value['status'] === 'nested') {
                 if ($value['type'] === 'node') {
-                    return "{$indent}{$indent}{$value['key']}: {$iter($value['children'], $depth + 1)}";
+                    return "$indent$indent{$value['key']}: {$iter($value['children'], $depth + 1)}";
                 }
-                return "{$indent}{$indent}{$value['key']}: {$value['value']}";
+                return "$indent$indent{$value['key']}: {$value['value']}";
             }
 
             if ($value['status'] === 'deleted') {
                 if ($value['type'] === 'node') {
-                    return "{$indent}- {$value['oldKey']}: {$iter($value['children'], $depth + 1)}";
+                    return "$indent- {$value['oldKey']}: {$iter($value['children'], $depth + 1)}";
                 }
-                return "{$indent}- {$value['oldKey']}: {$value['oldValue']}";
+                return "$indent- {$value['oldKey']}: {$value['oldValue']}";
             }
 
             if ($value['status'] === 'added') {
                 if ($value['type'] === 'node') {
-                    return "{$indent}+ {$value['newKey']}: {$iter($value['children'], $depth + 1)}";
+                    return "$indent+ {$value['newKey']}: {$iter($value['children'], $depth + 1)}";
                 }
-                return "{$indent}+ {$value['newKey']}: {$value['newValue']}";
+                return "$indent+ {$value['newKey']}: {$value['newValue']}";
             }
 
             if ($value['status'] === 'changed') {
@@ -47,8 +47,7 @@ function stylish(array $fileDiff): string
                 }
 
                 if ($value['type'] === 'node') {
-                    return $indent . "- " . $value['key'] . ": " . $iter($value['oldChildren'], $depth + 1) . "\n" .
-                        $indent . "+ " . $value['key'] . ": " . $iter($value['newChildren'], $depth + 1);
+                    return "$indent$indent{$value['key']}: {$iter($value['children'], $depth + 1)}";
                 }
             }
 
@@ -58,7 +57,8 @@ function stylish(array $fileDiff): string
         }, $node);
         //print_r($mapped);
         $string = implode("\n", $mapped);
-        return '{' . "\n" . $string . "\n" . '}';
+        $bracketIndent = str_repeat('  ', $depth - 1);
+        return '{' . "\n" . $string . "\n" . $bracketIndent . '}';
     };
 
     return $iter($fileDiff, 1);
@@ -71,7 +71,7 @@ function toString($value): string
 
 function diff($decodedFirstFile, $decodedSecondFile = false): array
 {
-    $merge = is_bool($decodedSecondFile) ? array_keys($decodedFirstFile) : array_merge($decodedFirstFile, $decodedSecondFile);
+    $merge = !is_array($decodedSecondFile) ? $decodedFirstFile : array_merge($decodedFirstFile, $decodedSecondFile);
     $keys = array_keys($merge);
     sort($keys);
     //print_r($keys);
@@ -154,8 +154,7 @@ function diff($decodedFirstFile, $decodedSecondFile = false): array
             return ['status' => 'changed',
                 'type' => 'node',
                 'key' => $key,
-                'oldChildren' => diff($decodedFirstFile[$key]),
-                'newChildren' => diff($decodedSecondFile[$key])];
+                'children' => diff($decodedFirstFile[$key], $decodedSecondFile[$key])];
         }
 
         $decodedFirstFile[$key] = is_string($decodedFirstFile[$key]) ? $decodedFirstFile[$key] : toString($decodedFirstFile[$key]);
@@ -167,6 +166,6 @@ function diff($decodedFirstFile, $decodedSecondFile = false): array
             'oldValue' => $decodedFirstFile[$key],
             'newValue' => $decodedSecondFile[$key]];
     }, array: $keys);
-    print_r($result);
+    //print_r($result);
     return $result;
 }
