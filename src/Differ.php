@@ -24,7 +24,7 @@ function fileDecode(string $filePath): mixed
             break;
         case 'yaml':
         case 'yml':
-            $stdClass = Yaml::parse($contentOfFile, Yaml::PARSE_OBJECT_FOR_MAP);
+            $stdClass = Yaml::parse($contentOfFile, 1);
             $decodedFile = (array)$stdClass;
             break;
         default:

@@ -8,7 +8,7 @@ function parser(mixed $decodedFirstFile, mixed $decodedSecondFile): string
     return stylish($result);
 }
 
-function stylish(array $fileDiff): string
+function stylish(mixed $fileDiff): string
 {
     $iter = static function (array $node, int $depth) use (&$iter) {
         $mapped = array_map(static function ($value) use ($iter, $depth) {
@@ -38,8 +38,9 @@ function stylish(array $fileDiff): string
 
             if ($value['status'] === 'changed') {
                 if (!empty($value['oldType'])) {
-                    return $indent . $indent2 . "- " . $value['key'] . ": " . $iter($value['oldChildren'], $depth + 1) . "\n" .
-                        $indent . $indent2 . "+ " . $value['key'] . ": " . $value['newValue'];
+                    return $indent . $indent2 . "- " . $value['key'] . ": " .
+                        $iter($value['oldChildren'], $depth + 1) . "\n" . $indent . $indent2 . "+ "
+                        . $value['key'] . ": " . $value['newValue'];
                 }
 
                 if (!empty($value['newType'])) {
@@ -54,7 +55,6 @@ function stylish(array $fileDiff): string
 
             return $indent . $indent2 . "- " . $value['key'] . ": " . $value['oldValue'] . "\n" .
                 $indent . $indent2 . "+ " . $value['key'] . ": " . $value['newValue'];
-
         }, $node);
         //print_r($mapped);
         $string = implode("\n", $mapped);
@@ -65,18 +65,19 @@ function stylish(array $fileDiff): string
     return $iter($fileDiff, 1);
 }
 
-function toString($value): string
+function toString(mixed $value): string
 {
     return strtolower(trim(var_export($value, true), "'"));
 }
 
-function diff($decodedFirstFile, $decodedSecondFile = false): array
+function diff(mixed $decodedFirstFile, mixed $decodedSecondFile = false): mixed
 {
     $merge = !is_array($decodedSecondFile) ? $decodedFirstFile : array_merge($decodedFirstFile, $decodedSecondFile);
     $keys = array_keys($merge);
     sort($keys);
     //print_r($keys);
-    $result = array_map(callback: static function ($key) use ($decodedFirstFile, $decodedSecondFile) {
+    //print_r($result);
+    return array_map(callback: static function ($key) use ($decodedFirstFile, $decodedSecondFile) {
         if ($decodedSecondFile === false) {
             if (is_array($decodedFirstFile[$key])) {
                 return ['status' => 'nested',
@@ -84,7 +85,8 @@ function diff($decodedFirstFile, $decodedSecondFile = false): array
                     'key' => $key,
                     'children' => diff($decodedFirstFile[$key])];
             }
-            $decodedFirstFile[$key] = is_string($decodedFirstFile[$key]) ? $decodedFirstFile[$key] : toString($decodedFirstFile[$key]);
+            $decodedFirstFile[$key] = is_string($decodedFirstFile[$key]) ?
+                $decodedFirstFile[$key] : toString($decodedFirstFile[$key]);
             return ['status' => 'nested',
                 'type' => 'sheet',
                 'key' => $key,
@@ -98,7 +100,8 @@ function diff($decodedFirstFile, $decodedSecondFile = false): array
                     'oldKey' => $key,
                     'children' => diff($decodedFirstFile[$key])];
             }
-            $decodedFirstFile[$key] = is_string($decodedFirstFile[$key]) ? $decodedFirstFile[$key] : toString($decodedFirstFile[$key]);
+            $decodedFirstFile[$key] = is_string($decodedFirstFile[$key]) ?
+                $decodedFirstFile[$key] : toString($decodedFirstFile[$key]);
             return ['status' => 'deleted',
                 'type' => 'sheet',
                 'oldKey' => $key,
@@ -112,7 +115,8 @@ function diff($decodedFirstFile, $decodedSecondFile = false): array
                     'newKey' => $key,
                     'children' => diff($decodedSecondFile[$key])];
             }
-            $decodedSecondFile[$key] = is_string($decodedSecondFile[$key]) ? $decodedSecondFile[$key] : toString($decodedSecondFile[$key]);
+            $decodedSecondFile[$key] = is_string($decodedSecondFile[$key]) ?
+                $decodedSecondFile[$key] : toString($decodedSecondFile[$key]);
             return ['status' => 'added',
                 'type' => 'sheet',
                 'newKey' => $key,
@@ -126,7 +130,8 @@ function diff($decodedFirstFile, $decodedSecondFile = false): array
                     'key' => $key,
                     'children' => diff($decodedFirstFile[$key], $decodedSecondFile[$key])];
             }
-            $decodedFirstFile[$key] = is_string($decodedFirstFile[$key]) ? $decodedFirstFile[$key] : toString($decodedFirstFile[$key]);
+            $decodedFirstFile[$key] = is_string($decodedFirstFile[$key]) ?
+                $decodedFirstFile[$key] : toString($decodedFirstFile[$key]);
             return ['status' => 'unchanged',
                 'type' => 'sheet',
                 'key' => $key,
@@ -158,8 +163,11 @@ function diff($decodedFirstFile, $decodedSecondFile = false): array
                 'children' => diff($decodedFirstFile[$key], $decodedSecondFile[$key])];
         }
 
-        $decodedFirstFile[$key] = is_string($decodedFirstFile[$key]) ? $decodedFirstFile[$key] : toString($decodedFirstFile[$key]);
-        $decodedSecondFile[$key] = is_string($decodedSecondFile[$key]) ? $decodedSecondFile[$key] : toString($decodedSecondFile[$key]);
+        $decodedFirstFile[$key] = is_string($decodedFirstFile[$key]) ?
+            $decodedFirstFile[$key] : toString($decodedFirstFile[$key]);
+
+        $decodedSecondFile[$key] = is_string($decodedSecondFile[$key]) ?
+            $decodedSecondFile[$key] : toString($decodedSecondFile[$key]);
 
         return ['status' => 'changed',
             'type' => 'sheet',
@@ -167,6 +175,4 @@ function diff($decodedFirstFile, $decodedSecondFile = false): array
             'oldValue' => $decodedFirstFile[$key],
             'newValue' => $decodedSecondFile[$key]];
     }, array: $keys);
-    //print_r($result);
-    return $result;
 }
