@@ -2,72 +2,12 @@
 
 namespace src\Parser;
 
+use function src\formatters\Stylish\stylish;
+
 function parser(mixed $decodedFirstFile, mixed $decodedSecondFile): string
 {
     $result = diff($decodedFirstFile, $decodedSecondFile);
     return stylish($result);
-}
-
-function stylish(mixed $fileDiff): string
-{
-    $iter = static function (array $node, int $depth) use (&$iter) {
-        $mapped = array_map(static function ($value) use ($iter, $depth) {
-            $indent = str_repeat('  ', $depth);
-            $indent2 = str_repeat('  ', $depth - 1);
-
-            if ($value['status'] === 'unchanged' || $value['status'] === 'nested') {
-                if ($value['type'] === 'node') {
-                    return "$indent$indent{$value['key']}: {$iter($value['children'], $depth + 1)}";
-                }
-                return "$indent$indent{$value['key']}: {$value['value']}";
-            }
-
-            if ($value['status'] === 'deleted') {
-                if ($value['type'] === 'node') {
-                    return "$indent$indent2- {$value['oldKey']}: {$iter($value['children'], $depth + 1)}";
-                }
-                return "$indent$indent2- {$value['oldKey']}: {$value['oldValue']}";
-            }
-
-            if ($value['status'] === 'added') {
-                if ($value['type'] === 'node') {
-                    return "$indent$indent2+ {$value['newKey']}: {$iter($value['children'], $depth + 1)}";
-                }
-                return "$indent$indent2+ {$value['newKey']}: {$value['newValue']}";
-            }
-
-            if ($value['status'] === 'changed') {
-                if (!empty($value['oldType'])) {
-                    return $indent . $indent2 . "- " . $value['key'] . ": " .
-                        $iter($value['oldChildren'], $depth + 1) . "\n" . $indent . $indent2 . "+ "
-                        . $value['key'] . ": " . $value['newValue'];
-                }
-
-                if (!empty($value['newType'])) {
-                    return $indent . $indent2 . "- " . $value['key'] . ": " . $value['oldValue'] . "\n" .
-                        $indent . $indent2 . "+ " . $value['key'] . ": " . $iter($value['newChildren'], $depth + 1);
-                }
-
-                if ($value['type'] === 'node') {
-                    return "$indent$indent{$value['key']}: {$iter($value['children'], $depth + 1)}";
-                }
-            }
-
-            return $indent . $indent2 . "- " . $value['key'] . ": " . $value['oldValue'] . "\n" .
-                $indent . $indent2 . "+ " . $value['key'] . ": " . $value['newValue'];
-        }, $node);
-        //print_r($mapped);
-        $string = implode("\n", $mapped);
-        $bracketIndent = str_repeat('  ', ($depth - 1) * 2);
-        return '{' . "\n" . $string . "\n" . $bracketIndent . '}';
-    };
-
-    return $iter($fileDiff, 1);
-}
-
-function toString(mixed $value): string
-{
-    return strtolower(trim(var_export($value, true), "'"));
 }
 
 function diff(mixed $decodedFirstFile, mixed $decodedSecondFile = false): mixed
@@ -175,4 +115,9 @@ function diff(mixed $decodedFirstFile, mixed $decodedSecondFile = false): mixed
             'oldValue' => $decodedFirstFile[$key],
             'newValue' => $decodedSecondFile[$key]];
     }, array: $keys);
+}
+
+function toString(mixed $value): string
+{
+    return strtolower(trim(var_export($value, true), "'"));
 }

@@ -3,7 +3,8 @@
     "autoload": {
         "files": [
             "src/Differ.php",
-            "src/Parser.php"
+            "src/Parser.php",
+            "src/formatters/Stylish.php"
         ]
     },
     "license": "MIT",
