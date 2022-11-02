@@ -2,21 +2,12 @@
 
 namespace src\Parser;
 
-use function src\formatters\Stylish\stylish;
-
-function parser(mixed $decodedFirstFile, mixed $decodedSecondFile): string
-{
-    $result = diff($decodedFirstFile, $decodedSecondFile);
-    return stylish($result);
-}
-
 function diff(mixed $decodedFirstFile, mixed $decodedSecondFile = false): mixed
 {
     $merge = !is_array($decodedSecondFile) ? $decodedFirstFile : array_merge($decodedFirstFile, $decodedSecondFile);
     $keys = array_keys($merge);
     sort($keys);
-    //print_r($keys);
-    //print_r($result);
+
     return array_map(callback: static function ($key) use ($decodedFirstFile, $decodedSecondFile) {
         if ($decodedSecondFile === false) {
             if (is_array($decodedFirstFile[$key])) {

@@ -5,7 +5,8 @@ namespace Hexlet\Code;
 use Exception;
 use Symfony\Component\Yaml\Yaml;
 
-use function src\Parser\parser;
+use function src\formatters\Stylish\stylish;
+use function src\Formatter\format;
 
 function fileDecode(string $filePath): mixed
 {
@@ -38,5 +39,5 @@ function genDiff(string $firstFile, string $secondFile): string
     $decodedFirstFile = fileDecode($firstFile);
     $decodedSecondFile = fileDecode($secondFile);
 
-    return parser($decodedFirstFile, $decodedSecondFile);
+    return format('stylish', $decodedFirstFile, $decodedSecondFile);
 }

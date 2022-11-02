@@ -4,6 +4,7 @@
         "files": [
             "src/Differ.php",
             "src/Parser.php",
+            "src/Formatter.php",
             "src/formatters/Stylish.php"
         ]
     },
