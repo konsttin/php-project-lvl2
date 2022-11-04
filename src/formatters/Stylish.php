@@ -2,9 +2,7 @@
 
 namespace src\formatters\Stylish;
 
-use function src\Parser\diff;
-
-function stylish(mixed $firstFile, mixed $secondFile): string
+function stylish(mixed $fileAST): string
 {
     $iter = static function (array $node, int $depth) use (&$iter) {
         $mapped = array_map(static function ($value) use ($iter, $depth) {
@@ -58,9 +56,7 @@ function stylish(mixed $firstFile, mixed $secondFile): string
         return '{' . "\n" . $string . "\n" . $bracketIndent . '}';
     };
 
-    $fileDiff = diff($firstFile, $secondFile);
-
-    $result = $iter($fileDiff, 1);
+    $result = $iter($fileAST, 1);
     print_r($result);
     return $result;
 }

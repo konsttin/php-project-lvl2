@@ -13,18 +13,15 @@ class DifferTest extends TestCase
      */
     public function testDiffer(string $filePath1, string $filePath2, string $expected): void
     {
-        $this->assertEquals($expected, genDiff($filePath1, $filePath2));
+        $this->assertEquals($expected, genDiff($filePath1, $filePath2, 'stylish'));
     }
 
     public function additionProvider(): mixed
     {
-        $result = file_get_contents(__DIR__ . '/../tests/fixtures/result');
-        $result2 = file_get_contents(__DIR__ . '/../tests/fixtures/result2');
+        $result = file_get_contents(__DIR__ . '/../tests/fixtures/resultStylish');
         return [
             'json' => ['tests/fixtures/file1.json', 'tests/fixtures/file2.json', $result],
-            'yml' => ['tests/fixtures/file1.yml', 'tests/fixtures/file2.yaml', $result],
-            'json2' => ['tests/fixtures/file3.json', 'tests/fixtures/file4.json', $result2],
-            'yml2' => ['tests/fixtures/file3.yml', 'tests/fixtures/file4.yaml', $result2]
+            'yml' => ['tests/fixtures/file1.yml', 'tests/fixtures/file2.yaml', $result]
         ];
     }
 }
