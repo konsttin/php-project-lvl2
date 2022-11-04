@@ -6,10 +6,10 @@ use function src\Formatter\format;
 use function src\Parser\fileDecode;
 use function src\MakerAST\makeAST;
 
-function genDiff(string $firstFile, string $secondFile, string $format = 'stylish'): string
+function genDiff(string $firstFilePath, string $secondFilePath, string $format = 'stylish'): string
 {
-    $decodedFirstFile = fileDecode($firstFile);
-    $decodedSecondFile = fileDecode($secondFile);
+    $decodedFirstFile = fileDecode($firstFilePath);
+    $decodedSecondFile = fileDecode($secondFilePath);
     $fileAST = makeAST($decodedFirstFile, $decodedSecondFile);
 
     return format($format, $fileAST);
