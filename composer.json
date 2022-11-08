@@ -6,7 +6,8 @@
             "src/MakerAST.php",
             "src/Formatter.php",
             "src/Parser.php",
-            "src/formatters/Stylish.php"
+            "src/formatters/Stylish.php",
+            "src/formatters/Plain.php"
         ]
     },
     "license": "MIT",
