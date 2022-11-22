@@ -75,22 +75,16 @@ function plain(mixed $fileAST): string
                 return "Property '$currentPath' was updated. From {$value['oldValue']} to {$value['newValue']}";
             }
 
-//            if ($value['status'] === 'unchanged' || $value['status'] === 'nested') {
-//                if ($value['type'] === 'node') {
-//                    return "$indent$indent{$value['key']}: {$iter($value['children'], $depth + 1)}";
-//                }
-//                return "$indent$indent{$value['key']}: {$value['value']}";
-//            }
-            return '';
+            return null;
         }, $node);
 
+        $mapped = array_filter($mapped);
         return implode("\n", $mapped);
     };
 
     $result = $iter($fileAST);
-    //print_r($result);
+    print_r($result);
     return $result;
-    //return file_get_contents('/home/konstantin/PhpstormProjects/php-project-lvl2/tests/fixtures/resultPlain');
 }
 
 function toStringWithQuotes(mixed $value): string

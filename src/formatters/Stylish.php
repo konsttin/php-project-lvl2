@@ -67,7 +67,7 @@ function stylish(mixed $fileAST): string
     };
 
     $result = $iter($fileAST, 1);
-    //print_r($result);
+    print_r($result);
     return $result;
 }
 
