@@ -13,6 +13,7 @@ function stylish(mixed $fileAST): string
                 if ($value['type'] === 'node') {
                     return "$indent$indent{$value['key']}: {$iter($value['children'], $depth + 1)}";
                 }
+                $value['value'] = toString($value['value']);
                 return "$indent$indent{$value['key']}: {$value['value']}";
             }
 
@@ -20,6 +21,7 @@ function stylish(mixed $fileAST): string
                 if ($value['type'] === 'node') {
                     return "$indent$indent2- {$value['oldKey']}: {$iter($value['children'], $depth + 1)}";
                 }
+                $value['oldValue'] = toString($value['oldValue']);
                 return "$indent$indent2- {$value['oldKey']}: {$value['oldValue']}";
             }
 
@@ -27,25 +29,33 @@ function stylish(mixed $fileAST): string
                 if ($value['type'] === 'node') {
                     return "$indent$indent2+ {$value['newKey']}: {$iter($value['children'], $depth + 1)}";
                 }
+                $value['newValue'] = toString($value['newValue']);
                 return "$indent$indent2+ {$value['newKey']}: {$value['newValue']}";
             }
 
             if ($value['status'] === 'changed') {
                 if (!empty($value['oldType'])) {
-                    return $indent . $indent2 . "- " . $value['key'] . ": " .
-                        $iter($value['oldChildren'], $depth + 1) . "\n" . $indent . $indent2 . "+ "
-                        . $value['key'] . ": " . $value['newValue'];
-                }
+                    if ($value['oldType'] === 'node' && $value['newType'] === 'sheet') {
+                        $value['newValue'] = toString($value['newValue']);
+                        return $indent . $indent2 . "- " . $value['key'] . ": " .
+                            $iter($value['oldChildren'], $depth + 1) . "\n" . $indent . $indent2 . "+ "
+                            . $value['key'] . ": " . $value['newValue'];
+                    }
 
-                if (!empty($value['newType'])) {
-                    return $indent . $indent2 . "- " . $value['key'] . ": " . $value['oldValue'] . "\n" .
-                        $indent . $indent2 . "+ " . $value['key'] . ": " . $iter($value['newChildren'], $depth + 1);
+                    if ($value['oldType'] === 'sheet' && $value['newType'] === 'node') {
+                        $value['oldValue'] = toString($value['oldValue']);
+                        return $indent . $indent2 . "- " . $value['key'] . ": " . $value['oldValue'] . "\n" .
+                            $indent . $indent2 . "+ " . $value['key'] . ": " . $iter($value['newChildren'], $depth + 1);
+                    }
                 }
 
                 if ($value['type'] === 'node') {
                     return "$indent$indent{$value['key']}: {$iter($value['children'], $depth + 1)}";
                 }
             }
+
+            $value['oldValue'] = toString($value['oldValue']);
+            $value['newValue'] = toString($value['newValue']);
 
             return $indent . $indent2 . "- " . $value['key'] . ": " . $value['oldValue'] . "\n" .
                 $indent . $indent2 . "+ " . $value['key'] . ": " . $value['newValue'];
@@ -57,6 +67,14 @@ function stylish(mixed $fileAST): string
     };
 
     $result = $iter($fileAST, 1);
-    print_r($result);
+    //print_r($result);
     return $result;
+}
+
+function toString(mixed $value): string
+{
+    if (is_string($value)) {
+        return $value;
+    }
+    return strtolower(trim(var_export($value, true), "'"));
 }

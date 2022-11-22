@@ -16,8 +16,7 @@ function makeAST(mixed $decodedFirstFile, mixed $decodedSecondFile = false): mix
                     'key' => $key,
                     'children' => makeAST($decodedFirstFile[$key])];
             }
-            $decodedFirstFile[$key] = is_string($decodedFirstFile[$key]) ?
-                $decodedFirstFile[$key] : toString($decodedFirstFile[$key]);
+
             return ['status' => 'nested',
                 'type' => 'sheet',
                 'key' => $key,
@@ -31,8 +30,7 @@ function makeAST(mixed $decodedFirstFile, mixed $decodedSecondFile = false): mix
                     'oldKey' => $key,
                     'children' => makeAST($decodedFirstFile[$key])];
             }
-            $decodedFirstFile[$key] = is_string($decodedFirstFile[$key]) ?
-                $decodedFirstFile[$key] : toString($decodedFirstFile[$key]);
+
             return ['status' => 'deleted',
                 'type' => 'sheet',
                 'oldKey' => $key,
@@ -46,8 +44,7 @@ function makeAST(mixed $decodedFirstFile, mixed $decodedSecondFile = false): mix
                     'newKey' => $key,
                     'children' => makeAST($decodedSecondFile[$key])];
             }
-            $decodedSecondFile[$key] = is_string($decodedSecondFile[$key]) ?
-                $decodedSecondFile[$key] : toString($decodedSecondFile[$key]);
+
             return ['status' => 'added',
                 'type' => 'sheet',
                 'newKey' => $key,
@@ -61,8 +58,7 @@ function makeAST(mixed $decodedFirstFile, mixed $decodedSecondFile = false): mix
                     'key' => $key,
                     'children' => makeAST($decodedFirstFile[$key], $decodedSecondFile[$key])];
             }
-            $decodedFirstFile[$key] = is_string($decodedFirstFile[$key]) ?
-                $decodedFirstFile[$key] : toString($decodedFirstFile[$key]);
+
             return ['status' => 'unchanged',
                 'type' => 'sheet',
                 'key' => $key,
@@ -94,12 +90,6 @@ function makeAST(mixed $decodedFirstFile, mixed $decodedSecondFile = false): mix
                 'children' => makeAST($decodedFirstFile[$key], $decodedSecondFile[$key])];
         }
 
-        $decodedFirstFile[$key] = is_string($decodedFirstFile[$key]) ?
-            $decodedFirstFile[$key] : toString($decodedFirstFile[$key]);
-
-        $decodedSecondFile[$key] = is_string($decodedSecondFile[$key]) ?
-            $decodedSecondFile[$key] : toString($decodedSecondFile[$key]);
-
         return ['status' => 'changed',
             'type' => 'sheet',
             'key' => $key,
@@ -108,7 +98,7 @@ function makeAST(mixed $decodedFirstFile, mixed $decodedSecondFile = false): mix
     }, array: $keys);
 }
 
-function toString(mixed $value): string
-{
-    return strtolower(trim(var_export($value, true), "'"));
-}
+//function toString(mixed $value): string
+//{
+//    return strtolower(trim(var_export($value, true), "'"));
+//}
