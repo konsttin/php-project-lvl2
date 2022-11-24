@@ -20,14 +20,14 @@
     ],
     "description": "hexlet php-project 2",
     "require": {
-        "php": "^8.1",
         "docopt/docopt": "^1.0",
-        "squizlabs/php_codesniffer": "^3.7.1",
-        "symfony/yaml": "^6.1"
+        "symfony/yaml": "^5.4",
+        "symfony/console": "^6.0"
     },
     "require-dev": {
         "roave/security-advisories": "dev-latest",
         "phpunit/phpunit": "^9.5",
-        "phpstan/phpstan": "^1.8"
+        "phpstan/phpstan": "^1.8",
+        "squizlabs/php_codesniffer": "^3.7.1"
     }
 }
