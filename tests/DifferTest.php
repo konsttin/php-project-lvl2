@@ -4,7 +4,7 @@ namespace tests\DifferTest;
 
 use PHPUnit\Framework\TestCase;
 
-use function Hexlet\Code\genDiff;
+use function Differ\Differ\genDiff;
 
 class DifferTest extends TestCase
 {
@@ -24,11 +24,14 @@ class DifferTest extends TestCase
     {
         $resultStylish = file_get_contents(__DIR__ . '/../tests/fixtures/resultStylish');
         $resultPlain = file_get_contents(__DIR__ . '/../tests/fixtures/resultPlain');
+        $resultJson = file_get_contents(__DIR__ . '/../tests/fixtures/resultJson');
         return [
             'jsonStylish' => [$resultStylish, 'tests/fixtures/file1.json', 'tests/fixtures/file2.json', 'stylish'],
             'ymlStylish' => [$resultStylish, 'tests/fixtures/file1.yml', 'tests/fixtures/file2.yaml', 'stylish'],
             'jsonPlain' => [$resultPlain, 'tests/fixtures/file1.json', 'tests/fixtures/file2.json', 'plain'],
-            'ymlPlain' => [$resultPlain, 'tests/fixtures/file1.yml', 'tests/fixtures/file2.yaml', 'plain']
+            'ymlPlain' => [$resultPlain, 'tests/fixtures/file1.yml', 'tests/fixtures/file2.yaml', 'plain'],
+            'jsonJson' => [$resultJson, 'tests/fixtures/file1.json', 'tests/fixtures/file2.json', 'json'],
+            'ymlJson' => [$resultJson, 'tests/fixtures/file1.yml', 'tests/fixtures/file2.yaml', 'json']
         ];
     }
 }
