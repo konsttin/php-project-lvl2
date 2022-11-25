@@ -5,6 +5,7 @@ namespace tests\DifferTest;
 use PHPUnit\Framework\TestCase;
 
 use function Differ\Differ\genDiff;
+use function src\Parser\getFullFilePath;
 
 class DifferTest extends TestCase
 {
@@ -22,16 +23,21 @@ class DifferTest extends TestCase
 
     public function additionProvider(): mixed
     {
-        $resultStylish = file_get_contents(__DIR__ . '/../tests/fixtures/resultStylish');
-        $resultPlain = file_get_contents(__DIR__ . '/../tests/fixtures/resultPlain');
-        $resultJson = file_get_contents(__DIR__ . '/../tests/fixtures/resultJson');
+        $resultStylish = file_get_contents(getFullFilePath('tests/fixtures/resultStylish'));
+        $resultPlain = file_get_contents(getFullFilePath('tests/fixtures/resultPlain'));
+        $resultJson = file_get_contents(getFullFilePath('tests/fixtures/resultJson'));
+
+        $file1JsonPath = getFullFilePath('tests/fixtures/file1.json');
+        $file2JsonPath = getFullFilePath('tests/fixtures/file2.json');
+        $file1YmlPath = getFullFilePath('tests/fixtures/file1.yml');
+        $file2YamlPath = getFullFilePath('tests/fixtures/file2.yaml');
         return [
-            'jsonStylish' => [$resultStylish, 'tests/fixtures/file1.json', 'tests/fixtures/file2.json', 'stylish'],
-            'ymlStylish' => [$resultStylish, 'tests/fixtures/file1.yml', 'tests/fixtures/file2.yaml', 'stylish'],
-            'jsonPlain' => [$resultPlain, 'tests/fixtures/file1.json', 'tests/fixtures/file2.json', 'plain'],
-            'ymlPlain' => [$resultPlain, 'tests/fixtures/file1.yml', 'tests/fixtures/file2.yaml', 'plain'],
-            'jsonJson' => [$resultJson, 'tests/fixtures/file1.json', 'tests/fixtures/file2.json', 'json'],
-            'ymlJson' => [$resultJson, 'tests/fixtures/file1.yml', 'tests/fixtures/file2.yaml', 'json']
+            'jsonStylish' => [$resultStylish, $file1JsonPath, $file2JsonPath, 'stylish'],
+            'ymlStylish' => [$resultStylish, $file1YmlPath, $file2YamlPath, 'stylish'],
+            'jsonPlain' => [$resultPlain, $file1JsonPath, $file2JsonPath, 'plain'],
+            'ymlPlain' => [$resultPlain, $file1YmlPath, $file2YamlPath, 'plain'],
+            'jsonJson' => [$resultJson, $file1JsonPath, $file2JsonPath, 'json'],
+            'ymlJson' => [$resultJson, $file1YmlPath, $file2YamlPath, 'json']
         ];
     }
 }

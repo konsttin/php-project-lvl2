@@ -5,13 +5,16 @@ namespace src\Parser;
 use Symfony\Component\Yaml\Yaml;
 use Exception;
 
-function fileDecode(string $filePath): mixed
+function getFullFilePath(string $filePath): mixed
 {
-    $path = __DIR__ . '/../' . $filePath;
+    return __DIR__ . '/../' . $filePath;
+}
 
-    $extension = pathinfo($path, PATHINFO_EXTENSION);
+function fileDecode(string $fullFilePath): mixed
+{
+    $extension = pathinfo($fullFilePath, PATHINFO_EXTENSION);
 
-    $contentOfFile = file_get_contents($path);
+    $contentOfFile = file_get_contents($fullFilePath);
     if ($contentOfFile === false) {
         throw new Exception('File is empty');
     }
