@@ -97,8 +97,3 @@ function makeAST(mixed $decodedFirstFile, mixed $decodedSecondFile = false): mix
             'newValue' => $decodedSecondFile[$key]];
     }, array: $keys);
 }
-
-//function toString(mixed $value): string
-//{
-//    return strtolower(trim(var_export($value, true), "'"));
-//}

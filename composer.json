@@ -18,6 +18,7 @@
             "email": "5449277@gmail.com"
         }
     ],
+    "bin": ["bin/gendiff"],
     "description": "hexlet php-project 2",
     "require": {
         "docopt/docopt": "^1.0",

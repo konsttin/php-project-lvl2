@@ -5,11 +5,6 @@ namespace src\Parser;
 use Symfony\Component\Yaml\Yaml;
 use Exception;
 
-function getFullFilePath(string $filePath): mixed
-{
-    return __DIR__ . '/../' . $filePath;
-}
-
 function fileDecode(string $fullFilePath): mixed
 {
     $extension = pathinfo($fullFilePath, PATHINFO_EXTENSION);
