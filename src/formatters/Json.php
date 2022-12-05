@@ -1,8 +1,11 @@
 <?php
 
-namespace src\formatters\Json;
+namespace Differ\Formatters\Json;
 
-function json(mixed $fileAST): string
+/**
+ * @throws \JsonException
+ */
+function getJsonOutput(mixed $fileAST): string
 {
     return json_encode($fileAST, JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT);
 }

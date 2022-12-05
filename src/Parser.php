@@ -1,18 +1,19 @@
 <?php
 
-namespace src\Parser;
+namespace Differ\Parser;
 
 use Symfony\Component\Yaml\Yaml;
 use Exception;
 
-function fileDecode(string $fullFilePath): mixed
+/**
+ * @throws \JsonException
+ * @throws Exception
+ */
+function getDecodedFile(string $fullFilePath): mixed
 {
-    $extension = pathinfo($fullFilePath, PATHINFO_EXTENSION);
+    $extension = getFileExtension($fullFilePath);
 
-    $contentOfFile = file_get_contents($fullFilePath);
-    if ($contentOfFile === false) {
-        throw new Exception('File is empty');
-    }
+    $contentOfFile = getFileContent($fullFilePath);
 
     switch ($extension) {
         case 'json':
@@ -27,4 +28,21 @@ function fileDecode(string $fullFilePath): mixed
             throw new Exception('Unexpected extension');
     }
     return $decodedFile;
+}
+
+/**
+ * @throws Exception
+ */
+function getFileContent(string $filePath): string
+{
+    $contentOfFile = file_get_contents($filePath);
+    if ($contentOfFile === false) {
+        throw new Exception('File is empty');
+    }
+    return $contentOfFile;
+}
+
+function getFileExtension(string $filePath): string
+{
+    return pathinfo($filePath, PATHINFO_EXTENSION);
 }

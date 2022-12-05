@@ -2,15 +2,19 @@
 
 namespace Differ\Differ;
 
-use function src\Formatter\format;
-use function src\Parser\fileDecode;
-use function src\MakerAST\makeAST;
+use function Differ\Formatter\getFormatOutput;
+use function Differ\Parser\getDecodedFile;
+use function Differ\MakerAST\makeAST;
 
+/**
+ * @throws \JsonException
+ * @throws \Exception
+ */
 function genDiff(string $firstFilePath, string $secondFilePath, string $format = 'stylish'): string
 {
-    $decodedFirstFile = fileDecode($firstFilePath);
-    $decodedSecondFile = fileDecode($secondFilePath);
+    $decodedFirstFile = getDecodedFile($firstFilePath);
+    $decodedSecondFile = getDecodedFile($secondFilePath);
     $fileAST = makeAST($decodedFirstFile, $decodedSecondFile);
 
-    return format($format, $fileAST);
+    return getFormatOutput($format, $fileAST);
 }

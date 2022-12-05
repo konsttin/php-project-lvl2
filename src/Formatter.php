@@ -1,19 +1,23 @@
 <?php
 
-namespace src\Formatter;
+namespace Differ\Formatter;
 
 use Exception;
 
-use function src\formatters\Stylish\stylish;
-use function src\formatters\Plain\plain;
-use function src\formatters\Json\json;
+use function Differ\Formatters\Stylish\getStylishOutput;
+use function Differ\Formatters\Plain\getPlainOutput;
+use function Differ\Formatters\Json\getJsonOutput;
 
-function format(string $formatName, mixed $fileAST): string
+/**
+ * @throws \JsonException
+ * @throws Exception
+ */
+function getFormatOutput(string $formatName, mixed $fileAST): string
 {
     return match ($formatName) {
-        'stylish' => stylish($fileAST),
-        'plain' => plain($fileAST),
-        'json' => json($fileAST),
+        'stylish' => getStylishOutput($fileAST),
+        'plain' => getPlainOutput($fileAST),
+        'json' => getJsonOutput($fileAST),
         default => throw new Exception('Unexpected format name')
     };
 }

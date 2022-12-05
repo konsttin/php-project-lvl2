@@ -1,8 +1,8 @@
 <?php
 
-namespace src\formatters\Plain;
+namespace Differ\Formatters\Plain;
 
-function plain(mixed $fileAST): string
+function getPlainOutput(mixed $fileAST): string
 {
     $iter = static function (array $node, string $previousKeys = '') use (&$iter) {
         $mapped = array_map(static function ($value) use ($iter, $previousKeys) {
@@ -83,14 +83,14 @@ function plain(mixed $fileAST): string
     };
 
     $result = $iter($fileAST);
-    print_r($result);
+    echo($result);
     return $result;
 }
 
 function toStringWithQuotes(mixed $value): string
 {
     if (is_string($value)) {
-        return "'{$value}'";
+        return "'$value'";
     }
     return strtolower(trim(var_export($value, true), "'"));
 }

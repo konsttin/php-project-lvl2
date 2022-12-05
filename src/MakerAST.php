@@ -1,6 +1,6 @@
 <?php
 
-namespace src\MakerAST;
+namespace Differ\MakerAST;
 
 function makeAST(mixed $decodedFirstFile, mixed $decodedSecondFile = false): mixed
 {

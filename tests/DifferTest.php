@@ -1,6 +1,6 @@
 <?php
 
-namespace tests\DifferTest;
+namespace Differ\DifferTest;
 
 use PHPUnit\Framework\TestCase;
 
@@ -24,7 +24,7 @@ class DifferTest extends TestCase
         $this->assertStringEqualsFile($expectedPath, genDiff($file1FullPath, $file2FullPath, $formatName));
     }
 
-    public function additionProvider(): array
+    public function additionProvider(): mixed
     {
         $resultStylish = 'tests/fixtures/resultStylish';
         $resultPlain = 'tests/fixtures/resultPlain';

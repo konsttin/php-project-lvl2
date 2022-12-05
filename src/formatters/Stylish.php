@@ -1,8 +1,8 @@
 <?php
 
-namespace src\formatters\Stylish;
+namespace Differ\Formatters\Stylish;
 
-function stylish(mixed $fileAST): string
+function getStylishOutput(mixed $fileAST): string
 {
     $iter = static function (array $node, int $depth) use (&$iter) {
         $mapped = array_map(static function ($value) use ($iter, $depth) {
@@ -67,7 +67,7 @@ function stylish(mixed $fileAST): string
     };
 
     $result = $iter($fileAST, 1);
-    print_r($result);
+    echo($result);
     return $result;
 }
 
