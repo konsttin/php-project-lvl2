@@ -23,7 +23,6 @@ function getPlainOutput(mixed $fileAST): string
                     return "Property '$currentPath' was added with value: [complex value]";
                 }
                 $newValue = toStringWithQuotes($value['newValue']);
-                $value['newValue'] = $newValue;
 
                 if ($previousKeys === '') {
                     return "Property '{$value['newKey']}' was added with value: {$newValue}";
