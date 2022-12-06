@@ -14,7 +14,7 @@ function getStylishOutput(mixed $fileAST): string
                     return "$indent$indent{$value['key']}: {$iter($value['children'], $depth + 1)}";
                 }
                 $valueString = toString($value['value']);
-                return "$indent$indent{$value['key']}: {$valueString}";
+                return "$indent$indent{$value['key']}: $valueString";
             }
 
             if ($value['status'] === 'deleted') {
@@ -22,7 +22,7 @@ function getStylishOutput(mixed $fileAST): string
                     return "$indent$indent2- {$value['oldKey']}: {$iter($value['children'], $depth + 1)}";
                 }
                 $oldValue = toString($value['oldValue']);
-                return "$indent$indent2- {$value['oldKey']}: {$oldValue}";
+                return "$indent$indent2- {$value['oldKey']}: $oldValue";
             }
 
             if ($value['status'] === 'added') {
@@ -30,7 +30,7 @@ function getStylishOutput(mixed $fileAST): string
                     return "$indent$indent2+ {$value['newKey']}: {$iter($value['children'], $depth + 1)}";
                 }
                 $newValue = toString($value['newValue']);
-                return "$indent$indent2+ {$value['newKey']}: {$newValue}";
+                return "$indent$indent2+ {$value['newKey']}: $newValue";
             }
 
             if ($value['status'] === 'changed') {

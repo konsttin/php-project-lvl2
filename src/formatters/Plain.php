@@ -25,10 +25,10 @@ function getPlainOutput(mixed $fileAST): string
                 $newValue = toStringWithQuotes($value['newValue']);
 
                 if ($previousKeys === '') {
-                    return "Property '{$value['newKey']}' was added with value: {$newValue}";
+                    return "Property '{$value['newKey']}' was added with value: $newValue";
                 }
                 $currentPath = "$previousKeys.{$value['newKey']}";
-                return "Property '$currentPath' was added with value: {$newValue}";
+                return "Property '$currentPath' was added with value: $newValue";
             }
 
             if ($value['status'] === 'changed') {
@@ -38,10 +38,10 @@ function getPlainOutput(mixed $fileAST): string
 
                         if ($previousKeys === '') {
                             return "Property '{$value['key']}' was updated. 
-                            From [complex value] to {$newValue}";
+                            From [complex value] to $newValue";
                         }
                         $currentPath = "$previousKeys.{$value['key']}";
-                        return "Property '$currentPath' was updated. From [complex value] to {$newValue}";
+                        return "Property '$currentPath' was updated. From [complex value] to $newValue";
                     }
 
                     if ($value['oldType'] === 'sheet' && $value['newType'] === 'node') {
@@ -49,10 +49,10 @@ function getPlainOutput(mixed $fileAST): string
 
                         if ($previousKeys === '') {
                             return "Property '{$value['key']}' was updated. 
-                            From {$oldValue} to [complex value]";
+                            From $oldValue to [complex value]";
                         }
                         $currentPath = "$previousKeys.{$value['key']}";
-                        return "Property '$currentPath' was updated. From {$oldValue} to [complex value]";
+                        return "Property '$currentPath' was updated. From $oldValue to [complex value]";
                     }
                 }
 
@@ -72,7 +72,7 @@ function getPlainOutput(mixed $fileAST): string
                     From $oldValue to $newValue";
                 }
                 $currentPath = "$previousKeys.{$value['key']}";
-                return "Property '$currentPath' was updated. From {$oldValue} to {$newValue}";
+                return "Property '$currentPath' was updated. From $oldValue to $newValue";
             }
 
             return null;
