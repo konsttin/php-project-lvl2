@@ -7,5 +7,7 @@ namespace Differ\Formatters\Json;
  */
 function getJsonOutput(mixed $fileAST): string
 {
-    return json_encode($fileAST, JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT);
+    $result = json_encode($fileAST, JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT);
+    echo($result);
+    return $result;
 }
