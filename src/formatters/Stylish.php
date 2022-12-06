@@ -13,38 +13,38 @@ function getStylishOutput(mixed $fileAST): string
                 if ($value['type'] === 'node') {
                     return "$indent$indent{$value['key']}: {$iter($value['children'], $depth + 1)}";
                 }
-                $value['value'] = toString($value['value']);
-                return "$indent$indent{$value['key']}: {$value['value']}";
+                $valueString = toString($value['value']);
+                return "$indent$indent{$value['key']}: {$valueString}";
             }
 
             if ($value['status'] === 'deleted') {
                 if ($value['type'] === 'node') {
                     return "$indent$indent2- {$value['oldKey']}: {$iter($value['children'], $depth + 1)}";
                 }
-                $value['oldValue'] = toString($value['oldValue']);
-                return "$indent$indent2- {$value['oldKey']}: {$value['oldValue']}";
+                $oldValue = toString($value['oldValue']);
+                return "$indent$indent2- {$value['oldKey']}: {$oldValue}";
             }
 
             if ($value['status'] === 'added') {
                 if ($value['type'] === 'node') {
                     return "$indent$indent2+ {$value['newKey']}: {$iter($value['children'], $depth + 1)}";
                 }
-                $value['newValue'] = toString($value['newValue']);
-                return "$indent$indent2+ {$value['newKey']}: {$value['newValue']}";
+                $newValue = toString($value['newValue']);
+                return "$indent$indent2+ {$value['newKey']}: {$newValue}";
             }
 
             if ($value['status'] === 'changed') {
-                if (!empty($value['oldType'])) {
+                if (isset($value['oldType'])) {
                     if ($value['oldType'] === 'node' && $value['newType'] === 'sheet') {
-                        $value['newValue'] = toString($value['newValue']);
+                        $newValue = toString($value['newValue']);
                         return $indent . $indent2 . "- " . $value['key'] . ": " .
                             $iter($value['oldChildren'], $depth + 1) . "\n" . $indent . $indent2 . "+ "
-                            . $value['key'] . ": " . $value['newValue'];
+                            . $value['key'] . ": " . $newValue;
                     }
 
                     if ($value['oldType'] === 'sheet' && $value['newType'] === 'node') {
-                        $value['oldValue'] = toString($value['oldValue']);
-                        return $indent . $indent2 . "- " . $value['key'] . ": " . $value['oldValue'] . "\n" .
+                        $oldValue = toString($value['oldValue']);
+                        return $indent . $indent2 . "- " . $value['key'] . ": " . $oldValue . "\n" .
                             $indent . $indent2 . "+ " . $value['key'] . ": " . $iter($value['newChildren'], $depth + 1);
                     }
                 }
@@ -54,11 +54,11 @@ function getStylishOutput(mixed $fileAST): string
                 }
             }
 
-            $value['oldValue'] = toString($value['oldValue']);
-            $value['newValue'] = toString($value['newValue']);
+            $oldValue = toString($value['oldValue']);
+            $newValue = toString($value['newValue']);
 
-            return $indent . $indent2 . "- " . $value['key'] . ": " . $value['oldValue'] . "\n" .
-                $indent . $indent2 . "+ " . $value['key'] . ": " . $value['newValue'];
+            return $indent . $indent2 . "- " . $value['key'] . ": " . $oldValue . "\n" .
+                $indent . $indent2 . "+ " . $value['key'] . ": " . $newValue;
         }, $node);
 
         $string = implode("\n", $mapped);

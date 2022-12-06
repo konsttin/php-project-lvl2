@@ -2,11 +2,13 @@
 
 namespace Differ\MakerAST;
 
+use function Functional\sort;
+
 function makeAST(mixed $decodedFirstFile, mixed $decodedSecondFile = false): mixed
 {
     $merge = !is_array($decodedSecondFile) ? $decodedFirstFile : array_merge($decodedFirstFile, $decodedSecondFile);
     $keys = array_keys($merge);
-    sort($keys);
+    $sortedKeys = sort($keys, fn ($left, $right) => strcmp($left, $right));
 
     return array_map(callback: static function ($key) use ($decodedFirstFile, $decodedSecondFile) {
         if ($decodedSecondFile === false) {
@@ -95,5 +97,5 @@ function makeAST(mixed $decodedFirstFile, mixed $decodedSecondFile = false): mix
             'key' => $key,
             'oldValue' => $decodedFirstFile[$key],
             'newValue' => $decodedSecondFile[$key]];
-    }, array: $keys);
+    }, array: $sortedKeys);
 }

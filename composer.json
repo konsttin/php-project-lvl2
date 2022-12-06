@@ -23,7 +23,8 @@
     "require": {
         "docopt/docopt": "^1.0",
         "symfony/yaml": "^5.4",
-        "symfony/console": "^6.0"
+        "symfony/console": "^6.0",
+        "lstrojny/functional-php": "^1.17"
     },
     "require-dev": {
         "roave/security-advisories": "dev-latest",

@@ -22,37 +22,38 @@ function getPlainOutput(mixed $fileAST): string
                     $currentPath = "$previousKeys.{$value['newKey']}";
                     return "Property '$currentPath' was added with value: [complex value]";
                 }
-                $value['newValue'] = toStringWithQuotes($value['newValue']);
+                $newValue = toStringWithQuotes($value['newValue']);
+                $value['newValue'] = $newValue;
 
                 if ($previousKeys === '') {
-                    return "Property '{$value['newKey']}' was added with value: {$value['newValue']}";
+                    return "Property '{$value['newKey']}' was added with value: {$newValue}";
                 }
                 $currentPath = "$previousKeys.{$value['newKey']}";
-                return "Property '$currentPath' was added with value: {$value['newValue']}";
+                return "Property '$currentPath' was added with value: {$newValue}";
             }
 
             if ($value['status'] === 'changed') {
-                if (!empty($value['oldType'])) {
+                if (isset($value['oldType'])) {
                     if ($value['oldType'] === 'node' && $value['newType'] === 'sheet') {
-                        $value['newValue'] = toStringWithQuotes($value['newValue']);
+                        $newValue = toStringWithQuotes($value['newValue']);
 
                         if ($previousKeys === '') {
                             return "Property '{$value['key']}' was updated. 
-                            From [complex value] to {$value['newValue']}";
+                            From [complex value] to {$newValue}";
                         }
                         $currentPath = "$previousKeys.{$value['key']}";
-                        return "Property '$currentPath' was updated. From [complex value] to {$value['newValue']}";
+                        return "Property '$currentPath' was updated. From [complex value] to {$newValue}";
                     }
 
                     if ($value['oldType'] === 'sheet' && $value['newType'] === 'node') {
-                        $value['oldValue'] = toStringWithQuotes($value['oldValue']);
+                        $oldValue = toStringWithQuotes($value['oldValue']);
 
                         if ($previousKeys === '') {
                             return "Property '{$value['key']}' was updated. 
-                            From {$value['oldValue']} to [complex value]";
+                            From {$oldValue} to [complex value]";
                         }
                         $currentPath = "$previousKeys.{$value['key']}";
-                        return "Property '$currentPath' was updated. From {$value['oldValue']} to [complex value]";
+                        return "Property '$currentPath' was updated. From {$oldValue} to [complex value]";
                     }
                 }
 
@@ -64,22 +65,22 @@ function getPlainOutput(mixed $fileAST): string
                     return $iter($value['children'], $currentPath);
                 }
 
-                $value['oldValue'] = toStringWithQuotes($value['oldValue']);
-                $value['newValue'] = toStringWithQuotes($value['newValue']);
+                $oldValue = toStringWithQuotes($value['oldValue']);
+                $newValue = toStringWithQuotes($value['newValue']);
 
                 if ($previousKeys === '') {
                     return "Property '{$value['key']}' was updated. 
-                    From {$value['oldValue']} to {$value['newValue']}";
+                    From $oldValue to $newValue";
                 }
                 $currentPath = "$previousKeys.{$value['key']}";
-                return "Property '$currentPath' was updated. From {$value['oldValue']} to {$value['newValue']}";
+                return "Property '$currentPath' was updated. From {$oldValue} to {$newValue}";
             }
 
             return null;
         }, $node);
 
-        $mapped = array_filter($mapped);
-        return implode("\n", $mapped);
+        $filtered = array_filter($mapped);
+        return implode("\n", $filtered);
     };
 
     $result = $iter($fileAST);
