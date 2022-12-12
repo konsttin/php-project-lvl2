@@ -2,7 +2,7 @@
 
 namespace Differ\Formatters\Stylish;
 
-function getStylishOutput(mixed $fileAST): string
+function getOutput(mixed $fileAST): string
 {
     $iter = static function (array $node, int $depth) use (&$iter) {
         $mapped = array_map(static function ($value) use ($iter, $depth) {
@@ -66,9 +66,7 @@ function getStylishOutput(mixed $fileAST): string
         return '{' . "\n" . $string . "\n" . $bracketIndent . '}';
     };
 
-    $result = $iter($fileAST, 1);
-    echo($result);
-    return $result;
+    return $iter($fileAST, 1);
 }
 
 function toString(mixed $value): string

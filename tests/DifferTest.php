@@ -14,26 +14,23 @@ class DifferTest extends TestCase
      * @param string $filePath2
      * @param string $expected
      * @param string $formatName
+     * @throws \JsonException
      */
     public function testDiffer(string $expected, string $filePath1, string $filePath2, string $formatName): void
     {
-        $expectedPath = __DIR__ . '/../' . $expected;
-        $file1FullPath = __DIR__ . '/../' . $filePath1;
-        $file2FullPath = __DIR__ . '/../' . $filePath2;
-
-        $this->assertStringEqualsFile($expectedPath, genDiff($file1FullPath, $file2FullPath, $formatName));
+        $this->assertStringEqualsFile($expected, genDiff($filePath1, $filePath2, $formatName));
     }
 
     public function additionProvider(): mixed
     {
-        $resultStylish = 'tests/fixtures/resultStylish';
-        $resultPlain = 'tests/fixtures/resultPlain';
-        $resultJson = 'tests/fixtures/resultJson';
+        $resultStylish = getFicsturePath('resultStylish');
+        $resultPlain = getFicsturePath('resultPlain');
+        $resultJson = getFicsturePath('resultJson');
 
-        $file1JsonPath = 'tests/fixtures/file1.json';
-        $file2JsonPath = 'tests/fixtures/file2.json';
-        $file1YmlPath = 'tests/fixtures/file1.yml';
-        $file2YamlPath = 'tests/fixtures/file2.yaml';
+        $file1JsonPath = getFicsturePath('file1.json');
+        $file2JsonPath = getFicsturePath('file2.json');
+        $file1YmlPath = getFicsturePath('file1.yml');
+        $file2YamlPath = getFicsturePath('file2.yaml');
 
         return [
             'jsonStylish' => [$resultStylish, $file1JsonPath, $file2JsonPath, 'stylish'],
@@ -44,4 +41,9 @@ class DifferTest extends TestCase
             'ymlJson' => [$resultJson, $file1YmlPath, $file2YamlPath, 'json']
         ];
     }
+}
+
+function getFicsturePath(string $ficstureName): string
+{
+    return __DIR__ . '/../' . 'tests/fixtures/' . $ficstureName;
 }

@@ -2,7 +2,7 @@
 
 namespace Differ\Formatters\Plain;
 
-function getPlainOutput(mixed $fileAST): string
+function getOutput(mixed $fileAST): string
 {
     $iter = static function (array $node, string $previousKeys = '') use (&$iter) {
         $mapped = array_map(static function ($value) use ($iter, $previousKeys) {
@@ -82,9 +82,7 @@ function getPlainOutput(mixed $fileAST): string
         return implode("\n", $filtered);
     };
 
-    $result = $iter($fileAST);
-    echo($result);
-    return $result;
+    return $iter($fileAST);
 }
 
 function toStringWithQuotes(mixed $value): string
