@@ -11,11 +11,19 @@ use Exception;
  */
 function getDecodedFile(string $fullFilePath): mixed
 {
+    $contentOfFile = getFileContent($fullFilePath);
     $extension = getFileExtension($fullFilePath);
 
-    $contentOfFile = getFileContent($fullFilePath);
+    return parseFile($contentOfFile, $extension);
+}
 
-    switch ($extension) {
+/**
+ * @throws \JsonException
+ * @throws Exception
+ */
+function parseFile(string $contentOfFile, string $extensionFile): mixed
+{
+    switch ($extensionFile) {
         case 'json':
             $decodedFile = json_decode($contentOfFile, true, JSON_THROW_ON_ERROR, JSON_THROW_ON_ERROR);
             break;
