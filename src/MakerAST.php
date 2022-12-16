@@ -16,7 +16,7 @@ function makeAST(mixed $decodedFirstFile, mixed $decodedSecondFile = false): mix
                 return ['status' => 'nested',
                     'type' => 'node',
                     'key' => $key,
-                    'children' => makeAST($decodedFirstFile[$key])];
+                    'children' => $decodedFirstFile[$key]];
             }
 
             return ['status' => 'nested',
@@ -30,7 +30,7 @@ function makeAST(mixed $decodedFirstFile, mixed $decodedSecondFile = false): mix
                 return ['status' => 'deleted',
                     'type' => 'node',
                     'oldKey' => $key,
-                    'children' => makeAST($decodedFirstFile[$key])];
+                    'oldChildren' => $decodedFirstFile[$key]];
             }
 
             return ['status' => 'deleted',
@@ -44,7 +44,7 @@ function makeAST(mixed $decodedFirstFile, mixed $decodedSecondFile = false): mix
                 return ['status' => 'added',
                     'type' => 'node',
                     'newKey' => $key,
-                    'children' => makeAST($decodedSecondFile[$key])];
+                    'newChildren' => $decodedSecondFile[$key]];
             }
 
             return ['status' => 'added',
@@ -72,7 +72,7 @@ function makeAST(mixed $decodedFirstFile, mixed $decodedSecondFile = false): mix
                 'oldType' => 'node',
                 'newType' => 'sheet',
                 'key' => $key,
-                'oldChildren' => makeAST($decodedFirstFile[$key]),
+                'oldChildren' => $decodedFirstFile[$key],
                 'newValue' => $decodedSecondFile[$key]];
         }
 
@@ -82,7 +82,7 @@ function makeAST(mixed $decodedFirstFile, mixed $decodedSecondFile = false): mix
                 'newType' => 'node',
                 'key' => $key,
                 'oldValue' => $decodedFirstFile[$key],
-                'newChildren' => makeAST($decodedSecondFile[$key])];
+                'newChildren' => $decodedSecondFile[$key]];
         }
 
         if (is_array($decodedFirstFile[$key]) && is_array($decodedSecondFile[$key])) {

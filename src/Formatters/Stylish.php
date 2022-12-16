@@ -9,7 +9,7 @@ function getOutput(mixed $fileAST): string
             $spaceUnchanged = str_repeat('  ', $depth);
             $spaceChanged = str_repeat('  ', $depth - 1);
 
-            if ($value['status'] === 'unchanged' || $value['status'] === 'nested') {
+            if ($value['status'] === 'unchanged') {
                 if ($value['type'] === 'node') {
                     return "$spaceUnchanged$spaceUnchanged{$value['key']}: {$iter($value['children'], $depth + 1)}";
                 }
@@ -17,9 +17,19 @@ function getOutput(mixed $fileAST): string
                 return "$spaceUnchanged$spaceUnchanged{$value['key']}: $valueString";
             }
 
+            if ($value['status'] === 'nested') {
+                if ($value['type'] === 'node') {
+                    $children = implode("\n", $value['children']);
+                    return "$spaceUnchanged$spaceUnchanged{$value['key']}: $children";
+                }
+                $valueString = toString($value['value']);
+                return "$spaceUnchanged$spaceUnchanged{$value['key']}: $valueString";
+            }
+
             if ($value['status'] === 'deleted') {
                 if ($value['type'] === 'node') {
-                    return "$spaceUnchanged$spaceChanged- {$value['oldKey']}: {$iter($value['children'], $depth + 1)}";
+                    $oldChildren = implode("\n", $value['oldChildren']);
+                    return "$spaceUnchanged$spaceChanged- {$value['oldKey']}: $oldChildren";
                 }
                 $oldValue = toString($value['oldValue']);
                 return "$spaceUnchanged$spaceChanged- {$value['oldKey']}: $oldValue";
@@ -27,7 +37,8 @@ function getOutput(mixed $fileAST): string
 
             if ($value['status'] === 'added') {
                 if ($value['type'] === 'node') {
-                    return "$spaceUnchanged$spaceChanged+ {$value['newKey']}: {$iter($value['children'], $depth + 1)}";
+                    $newChildren = implode("\n", $value['newChildren']);
+                    return "$spaceUnchanged$spaceChanged+ {$value['newKey']}: $newChildren";
                 }
                 $newValue = toString($value['newValue']);
                 return "$spaceUnchanged$spaceChanged+ {$value['newKey']}: $newValue";
@@ -36,17 +47,18 @@ function getOutput(mixed $fileAST): string
             if ($value['status'] === 'changed') {
                 if (isset($value['oldType'])) {
                     if ($value['oldType'] === 'node' && $value['newType'] === 'sheet') {
+                        $oldChildren = implode("\n", $value['oldChildren']);
                         $newValue = toString($value['newValue']);
                         return $spaceUnchanged . $spaceChanged . "- " . $value['key'] . ": " .
-                            $iter($value['oldChildren'], $depth + 1) . "\n" . $spaceUnchanged . $spaceChanged . "+ "
+                            $oldChildren . "\n" . $spaceUnchanged . $spaceChanged . "+ "
                             . $value['key'] . ": " . $newValue;
                     }
 
                     if ($value['oldType'] === 'sheet' && $value['newType'] === 'node') {
                         $oldValue = toString($value['oldValue']);
+                        $newChildren = implode("\n", $value['newChildren']);
                         return $spaceUnchanged . $spaceChanged . "- " . $value['key'] . ": " . $oldValue . "\n" .
-                            $spaceUnchanged . $spaceChanged . "+ " . $value['key'] . ": " .
-                            $iter($value['newChildren'], $depth + 1);
+                            $spaceUnchanged . $spaceChanged . "+ " . $value['key'] . ": " . $newChildren;
                     }
                 }
 
