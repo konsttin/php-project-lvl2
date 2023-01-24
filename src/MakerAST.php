@@ -4,7 +4,12 @@ namespace Differ\MakerAST;
 
 use function Functional\sort;
 
-function makeAST(mixed $decodedFirstFile, mixed $decodedSecondFile = false): mixed
+/**
+ * @param mixed $decodedFirstFile
+ * @param mixed $decodedSecondFile
+ * @return array
+ */
+function makeAST(mixed $decodedFirstFile, mixed $decodedSecondFile = false): array
 {
     $merge = !is_array($decodedSecondFile) ? $decodedFirstFile : array_merge($decodedFirstFile, $decodedSecondFile);
     $keys = array_keys($merge);
@@ -16,7 +21,7 @@ function makeAST(mixed $decodedFirstFile, mixed $decodedSecondFile = false): mix
                 return ['status' => 'nested',
                     'type' => 'node',
                     'key' => $key,
-                    'children' => $decodedFirstFile[$key]];
+                    'value' => $decodedFirstFile[$key]];
             }
 
             return ['status' => 'nested',
@@ -30,7 +35,7 @@ function makeAST(mixed $decodedFirstFile, mixed $decodedSecondFile = false): mix
                 return ['status' => 'deleted',
                     'type' => 'node',
                     'oldKey' => $key,
-                    'oldChildren' => $decodedFirstFile[$key]];
+                    'oldValue' => $decodedFirstFile[$key]];
             }
 
             return ['status' => 'deleted',
@@ -44,7 +49,7 @@ function makeAST(mixed $decodedFirstFile, mixed $decodedSecondFile = false): mix
                 return ['status' => 'added',
                     'type' => 'node',
                     'newKey' => $key,
-                    'newChildren' => $decodedSecondFile[$key]];
+                    'newValue' => $decodedSecondFile[$key]];
             }
 
             return ['status' => 'added',
@@ -72,7 +77,7 @@ function makeAST(mixed $decodedFirstFile, mixed $decodedSecondFile = false): mix
                 'oldType' => 'node',
                 'newType' => 'sheet',
                 'key' => $key,
-                'oldChildren' => $decodedFirstFile[$key],
+                'oldValue' => $decodedFirstFile[$key],
                 'newValue' => $decodedSecondFile[$key]];
         }
 
@@ -82,7 +87,7 @@ function makeAST(mixed $decodedFirstFile, mixed $decodedSecondFile = false): mix
                 'newType' => 'node',
                 'key' => $key,
                 'oldValue' => $decodedFirstFile[$key],
-                'newChildren' => $decodedSecondFile[$key]];
+                'newValue' => $decodedSecondFile[$key]];
         }
 
         if (is_array($decodedFirstFile[$key]) && is_array($decodedSecondFile[$key])) {
