@@ -7,7 +7,7 @@ use function Functional\sort;
 /**
  * @param mixed $decodedFirstFile
  * @param mixed $decodedSecondFile
- * @return array
+ * @return array<mixed>
  */
 function makeAST(mixed $decodedFirstFile, mixed $decodedSecondFile = false): array
 {

@@ -8,7 +8,6 @@ function getOutput(mixed $fileAST): string
         $mapped = array_map(static function ($value) use ($iter, $depth) {
             $spaceUnchanged = str_repeat('  ', $depth);
             $spaceChanged = str_repeat('  ', $depth - 1);
-            
             if ($value['status'] === 'unchanged') {
                 if ($value['type'] === 'node') {
                     return "$spaceUnchanged$spaceUnchanged{$value['key']}: {$iter($value['children'], $depth + 1)}";
@@ -27,7 +26,7 @@ function getOutput(mixed $fileAST): string
 
             if ($value['status'] === 'deleted') {
 //                if ($value['type'] === 'node') {
-//                    return "$spaceUnchanged$spaceChanged- {$value['oldKey']}: {$iter($value['children'], $depth + 1)}";
+//                   return "$spaceUnchanged$spaceChanged- {$value['oldKey']}: {$iter($value['children'], $depth + 1)}";
 //                }
                 $oldValue = toString($value['oldValue'], $depth);
                 return "$spaceUnchanged$spaceChanged- {$value['oldKey']}: $oldValue";
@@ -35,7 +34,7 @@ function getOutput(mixed $fileAST): string
 
             if ($value['status'] === 'added') {
 //                if ($value['type'] === 'node') {
-//                    return "$spaceUnchanged$spaceChanged+ {$value['newKey']}: {$iter($value['children'], $depth + 1)}";
+//                   return "$spaceUnchanged$spaceChanged+ {$value['newKey']}: {$iter($value['children'], $depth + 1)}";
 //                }
                 $newValue = toString($value['newValue'], $depth);
                 return "$spaceUnchanged$spaceChanged+ {$value['newKey']}: $newValue";
@@ -91,7 +90,7 @@ function toString(mixed $value, int $depth = 1): string
     return strtolower(trim(var_export($value, true), "'"));
 }
 
-function stringify($node, $depth = 1): string
+function stringify(mixed $node, int $depth = 1): string
 {
     if (!is_array($node)) {
         return toString($node);
