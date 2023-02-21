@@ -8,56 +8,28 @@ function getOutput(mixed $fileAST): string
         $mapped = array_map(static function ($value) use ($iter, $depth) {
             $spaceUnchanged = str_repeat('  ', $depth);
             $spaceChanged = str_repeat('  ', $depth - 1);
+
+            $normalizeValue1 = is_array($value) ? $iter($value, $depth + 1) : $value;
+
             if ($value['status'] === 'unchanged') {
-//                if ($value['type'] === 'node') {
-//                    return "$spaceUnchanged$spaceUnchanged{$value['key']}: {$iter($value['children'], $depth + 1)}";
-//                }
-//                $valueString = toString($value['value1'], $depth);
-                return "$spaceUnchanged$spaceUnchanged{$value['key']}: {$value['value1']}";
+                return "$spaceUnchanged$spaceUnchanged{$value['key']}: {$normalizeValue1}";
             }
 
             if ($value['status'] === 'nested') {
-//                if ($value['type'] === 'node') {
-//                    return "$spaceUnchanged$spaceUnchanged{$value['key']}: {$iter($value['children'], $depth + 1)}";
-//                }
-//                $valueString = toString($value['value'], $depth);
-                return "$spaceUnchanged$spaceUnchanged{$value['key']}: {$value['value1']}";
+                return "$spaceUnchanged$spaceUnchanged{$value['key']}: {$normalizeValue1}";
             }
 
             if ($value['status'] === 'deleted') {
-//                if ($value['type'] === 'node') {
-//                   return "$spaceUnchanged$spaceChanged- {$value['oldKey']}: {$iter($value['children'], $depth + 1)}";
-//                }
-//                $oldValue = toString($value['value1'], $depth);
-                return "$spaceUnchanged$spaceChanged- {$value['key']}: {$value['value1']}";
+                return "$spaceUnchanged$spaceChanged- {$value['key']}: {$normalizeValue1}";
             }
 
             if ($value['status'] === 'added') {
-//                if ($value['type'] === 'node') {
-//                   return "$spaceUnchanged$spaceChanged+ {$value['newKey']}: {$iter($value['children'], $depth + 1)}";
-//                }
-//                $newValue = toString($value['value2'], $depth);
-                return "$spaceUnchanged$spaceChanged+ {$value['key']}: {$value['value2']}";
+                $normalizeValue2 = is_array($value['value2']) ? $iter($value['value2'], $depth + 1) : $value['value2'];
+                return "$spaceUnchanged$spaceChanged+ {$value['key']}: {$normalizeValue2}";
             }
 
             if ($value['status'] === 'changed') {
                 if (isset($value['children'])) {
-//                    $oldValue = toString($value['oldValue'], $depth);
-//                    $newValue = toString($value['newValue'], $depth);
-//
-//                    if ($value['oldType'] === 'node' && $value['newType'] === 'sheet') {
-//                        return $spaceUnchanged . $spaceChanged . "- " . $value['key'] . ": " .
-//                            $oldValue . "\n" . $spaceUnchanged . $spaceChanged . "+ "
-//                            . $value['key'] . ": " . $newValue;
-//                    }
-//
-//                    if ($value['oldType'] === 'sheet' && $value['newType'] === 'node') {
-//                        return $spaceUnchanged . $spaceChanged . "- " . $value['key'] . ": " . $oldValue . "\n" .
-//                            $spaceUnchanged . $spaceChanged . "+ " . $value['key'] . ": " . $newValue;
-//                    }
-//                }
-
-//                    if ($value['type'] === 'node') {
                         return "$spaceUnchanged$spaceUnchanged{$value['key']}: {$iter($value['children'], $depth + 1)}";
                     }
                 }
