@@ -4,7 +4,7 @@ namespace Differ\Formatters\Stylish;
 
 function getOutput(mixed $fileAST): string
 {
-//    var_dump($fileAST);
+//  var_dump($fileAST);
     $iter = static function (array $node, int $depth) use (&$iter) {
         $mapped = array_map(static function ($value) use ($iter, $depth) {
             $spaceUnchanged = str_repeat('  ', $depth);
