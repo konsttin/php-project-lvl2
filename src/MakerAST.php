@@ -12,17 +12,19 @@ function makeAST(mixed $decodedFirstFile, mixed $decodedSecondFile = false): mix
 
     return array_map(callback: static function ($key) use ($decodedFirstFile, $decodedSecondFile) {
         if ($decodedSecondFile === false) {
-            if (is_array($decodedFirstFile[$key])) {
-                return ['status' => 'nested',
-                    'type' => 'node',
-                    'key' => $key,
-                    'children' => makeAST($decodedFirstFile[$key])];
-            }
+//            if (is_array($decodedFirstFile[$key])) {
+//                return ['status' => 'nested',
+//                    'type' => 'node',
+//                    'key' => $key,
+//                    'children' => makeAST($decodedFirstFile[$key])];
+//            }
+//
+//            return ['status' => 'nested',
+//                'type' => 'sheet',
+//                'key' => $key,
+//                'value' => $decodedFirstFile[$key]];
+            return getNestedNode($decodedFirstFile[$key], $key);
 
-            return ['status' => 'nested',
-                'type' => 'sheet',
-                'key' => $key,
-                'value' => $decodedFirstFile[$key]];
         }
 
         if (!array_key_exists($key, $decodedSecondFile)) {
@@ -98,4 +100,32 @@ function makeAST(mixed $decodedFirstFile, mixed $decodedSecondFile = false): mix
             'oldValue' => $decodedFirstFile[$key],
             'newValue' => $decodedSecondFile[$key]];
     }, array: $sortedKeys);
+}
+
+/**
+ * @param mixed $content
+ * @return mixed
+ */
+function getNestedNode($content, $key)
+{
+    $iter = function ($node) use (&$iter, $key) {
+        if (!is_array($node)) {
+            return ['status' => 'nested',
+                'type' => 'sheet',
+                'key' => $key,
+                'value' => $node];
+        }
+
+        $keys = array_keys($node);
+        return array_map(function ($key) use ($node, $iter) {
+            $value = is_array($node[$key]) ? $iter($node[$key]) : $node[$key];
+
+            return ['status' => 'nested',
+                'type' => 'node',
+                'key' => $key,
+                'children' => $value];
+        }, $keys);
+    };
+
+    return $iter($content);
 }
