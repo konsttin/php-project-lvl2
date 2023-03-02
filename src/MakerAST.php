@@ -12,19 +12,19 @@ function makeAST(mixed $decodedFirstFile, mixed $decodedSecondFile = false): mix
 
     return array_map(callback: static function ($key) use ($decodedFirstFile, $decodedSecondFile) {
         if ($decodedSecondFile === false) {
-//            if (is_array($decodedFirstFile[$key])) {
-//                return ['status' => 'nested',
-//                    'type' => 'node',
-//                    'key' => $key,
-//                    'children' => makeAST($decodedFirstFile[$key])];
-//            }
+            if (is_array($decodedFirstFile[$key])) {
+                return ['status' => 'nested',
+                    'type' => 'node',
+                    'key' => $key,
+                    'children' => makeAST($decodedFirstFile[$key])];
+            }
 
-//
-//            return ['status' => 'nested',
-//                'type' => 'sheet',
-//                'key' => $key,
-//                'value' => $decodedFirstFile[$key]];
-            return getNestedNode($decodedFirstFile[$key], $key);
+
+            return ['status' => 'nested',
+                'type' => 'sheet',
+                'key' => $key,
+                'value' => $decodedFirstFile[$key]];
+//            return getNestedNode($decodedFirstFile[$key], $key);
 
         }
 
