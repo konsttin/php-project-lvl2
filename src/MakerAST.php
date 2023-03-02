@@ -25,7 +25,6 @@ function makeAST(mixed $decodedFirstFile, mixed $decodedSecondFile = false): mix
                 'key' => $key,
                 'value' => $decodedFirstFile[$key]];
 //            return getNestedNode($decodedFirstFile[$key], $key);
-
         }
 
         if (!array_key_exists($key, $decodedSecondFile)) {
@@ -105,6 +104,7 @@ function makeAST(mixed $decodedFirstFile, mixed $decodedSecondFile = false): mix
 
 /**
  * @param mixed $content
+ * @param mixed $key
  * @return mixed
  */
 function getNestedNode($content, $key)
