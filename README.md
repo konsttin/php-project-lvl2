@@ -1,4 +1,4 @@
-# Differ
+## Differ utility
 
 [![Actions Status](https://github.com/konsttin/php-project-lvl2/workflows/hexlet-check/badge.svg)](https://github.com/konsttin/php-project-lvl2/actions)
 [![PHP CI](https://github.com/konsttin/php-project-lvl2/actions/workflows/workflow.yml/badge.svg)](https://github.com/konsttin/php-project-lvl2/actions/workflows/workflow.yml)
@@ -6,37 +6,42 @@
 [![Test Coverage](https://api.codeclimate.com/v1/badges/d39302772ccba220f546/test_coverage)](https://codeclimate.com/github/konsttin/php-project-lvl2/test_coverage)
 
 
-Программа сравнивает два конфигурационных файла. 
-Cli-утилита принимает через командную строку два аргумента — пути до этих файлов.
+Utility compares json or yml files. Output can be displayed in formats:
+- stylish
+- plain
+- json
 
-Результат сравнения файлов может выводиться в разных форматах: 
-- stylish - "стандартный"
-- plain - "плоский"
-- json - "JSON-формат"
+## Requirements
+* PHP >= 8.1
+* [Composer](https://getcomposer.org/)
 
-Помощь
+## Install
 ```sh
-$  ./bin/gendiff -h
-```
-Пример использования
-```sh
-$  ./bin/gendiff tests/fixtures/file1.json tests/fixtures/file2.json -f plain
-```
-
-
-## Установка
-
-```sh
-$ git clone https://github.com/konsttin/php-project-lvl2
-$ cd php-project-lvl2
+$ git clone git@github.com:konsttin/php-project-lvl2.git
+$ cd php-project-lvl2/
 $ make install
 ```
 
-## Запуск тестов
+## Usage
+gendiff (-h | --help)
 
+gendiff (-v | --version)
+
+gendiff [--format <fmt>] <firstFile> <secondFile>
+
+## Options
+-h --help &emsp;&emsp; Show this screen
+
+-v --version &emsp; Show version
+
+--format <fmt> &emsp; Report format [default: stylish]
+
+## Examples of usage
 ```sh
-$ make test
-```
+$  ./bin/gendiff tests/fixtures/file1.json tests/fixtures/file2.json -f stylish
 
-## Демонстрация
+$  ./bin/gendiff tests/fixtures/file1.json tests/fixtures/file2.json -f plain
+
+$  ./bin/gendiff tests/fixtures/file1.json tests/fixtures/file2.json -f json
+```
 [![asciicast](https://asciinema.org/a/7f16TH0WqIlSA7a5zcI40xc37.svg)](https://asciinema.org/a/7f16TH0WqIlSA7a5zcI40xc37)

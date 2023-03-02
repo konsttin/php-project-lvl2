@@ -4,7 +4,6 @@ namespace Differ\Formatters\Stylish;
 
 function getOutput(mixed $fileAST): string
 {
-//  var_dump($fileAST);
     $iter = static function (array $node, int $depth) use (&$iter) {
         $mapped = array_map(static function ($value) use ($iter, $depth) {
             $spaceUnchanged = str_repeat('  ', $depth);
@@ -78,24 +77,3 @@ function toString(mixed $value): string
     }
     return strtolower(trim(var_export($value, true), "'"));
 }
-
-//function stringify($content)
-//{
-//    $iter = function ($content) use (&$iter) {
-//        if (!is_array($content)) {
-//            if ($content === null) {
-//                return 'null';
-//            }
-//            return trim(var_export($content, true), "'");
-//        }
-//
-//        $keys = array_keys($content);
-//        return array_map(function ($key) use ($content, $iter) {
-//            $value = (is_array($content[$key])) ? $iter($content[$key]) : $content[$key];
-//
-//            return makeNode('unchanged', $key, $value);
-//        }, $keys);
-//    };
-//
-//    return $iter($content);
-//}
