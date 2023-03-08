@@ -10,53 +10,56 @@ function getStylishOutput(mixed $fileAST): string
             $spaceUnchanged = str_repeat('  ', $depth);
             $spaceChanged = str_repeat('  ', $depth - 1);
 
+            $value1 = $value['value1'] ?? null;
+            $value2 = $value['value2'] ?? null;
+
             if ($value['status'] === 'unchanged' || $value['status'] === 'nested') {
-                if (is_array($value['value1'])) {
-                    return "$spaceUnchanged$spaceUnchanged{$value['key']}: {$iter($value['value1'], $depth + 1)}";
+                if (is_array($value1)) {
+                    return "$spaceUnchanged$spaceUnchanged{$value['key']}: {$iter($value1, $depth + 1)}";
                 }
-                $valueString = toString($value['value1']);
+                $valueString = toString($value1);
                 return "$spaceUnchanged$spaceUnchanged{$value['key']}: $valueString";
             }
 
             if ($value['status'] === 'deleted') {
-                if (is_array($value['value1'])) {
-                    return "$spaceUnchanged$spaceChanged- {$value['key']}: {$iter($value['value1'], $depth + 1)}";
+                if (is_array($value1)) {
+                    return "$spaceUnchanged$spaceChanged- {$value['key']}: {$iter($value1, $depth + 1)}";
                 }
-                $oldValue = toString($value['value1']);
+                $oldValue = toString($value1);
                 return "$spaceUnchanged$spaceChanged- {$value['key']}: $oldValue";
             }
 
             if ($value['status'] === 'added') {
-                if (is_array($value['value2'])) {
-                    return "$spaceUnchanged$spaceChanged+ {$value['key']}: {$iter($value['value2'], $depth + 1)}";
+                if (is_array($value2)) {
+                    return "$spaceUnchanged$spaceChanged+ {$value['key']}: {$iter($value2, $depth + 1)}";
                 }
-                $newValue = toString($value['value2']);
+                $newValue = toString($value2);
                 return "$spaceUnchanged$spaceChanged+ {$value['key']}: $newValue";
             }
 
             if ($value['status'] === 'changed') {
 //                if (isset($value['oldType'])) {
-                if (is_array($value['value1']) && !is_array($value['value2'])) {
-                    $newValue = toString($value['value2']);
+                if (is_array($value1) && !is_array($value2)) {
+                    $newValue = toString($value2);
                     return $spaceUnchanged . $spaceChanged . "- " . $value['key'] . ": " .
-                        $iter($value['value1'], $depth + 1) . "\n" . $spaceUnchanged . $spaceChanged . "+ "
+                        $iter($value1, $depth + 1) . "\n" . $spaceUnchanged . $spaceChanged . "+ "
                         . $value['key'] . ": " . $newValue;
                 }
 
-                if (!is_array($value['value1']) && is_array($value['value2'])) {
+                if (!is_array($value1) && is_array($value2)) {
                     $oldValue = toString($value['value1']);
                     return $spaceUnchanged . $spaceChanged . "- " . $value['key'] . ": " . $oldValue . "\n" .
                         $spaceUnchanged . $spaceChanged . "+ " . $value['key'] . ": " .
-                        $iter($value['value2'], $depth + 1);
+                        $iter($value2, $depth + 1);
                 }
 //                }
-                if (is_array($value['value1'])) {
-                    return "$spaceUnchanged$spaceUnchanged{$value['key']}: {$iter($value['value1'], $depth + 1)}";
+                if (is_array($value1)) {
+                    return "$spaceUnchanged$spaceUnchanged{$value['key']}: {$iter($value1, $depth + 1)}";
                 }
             }
 
-            $oldValue = toString($value['value1']);
-            $newValue = toString($value['value2']);
+            $oldValue = toString($value1);
+            $newValue = toString($value2);
 
             return $spaceUnchanged . $spaceChanged . "- " . $value['key'] . ": " . $oldValue . "\n" .
                 $spaceUnchanged . $spaceChanged . "+ " . $value['key'] . ": " . $newValue;
