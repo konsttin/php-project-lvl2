@@ -8,9 +8,9 @@ function getOutput(mixed $fileAST): string
         $mapped = array_map(static function ($value) use ($iter, $previousKeys) {
             if ($value['status'] === 'deleted') {
                 if ($previousKeys === '') {
-                    return "Property '{$value['oldKey']}' was removed";
+                    return "Property '{$value['key']}' was removed";
                 }
-                $currentPath = "$previousKeys.{$value['oldKey']}";
+                $currentPath = "$previousKeys.{$value['key']}";
                 return "Property '$currentPath' was removed";
             }
 
