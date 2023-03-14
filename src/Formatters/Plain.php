@@ -2,77 +2,34 @@
 
 namespace Differ\Formatters\Plain;
 
-function getOutput(mixed $fileAST): string
+/**
+ * @param mixed $fileAST
+ * @return string
+ * @throws \Exception
+ */
+function getPlainOutput(mixed $fileAST): string
 {
     $iter = static function (array $node, string $previousKeys = '') use (&$iter) {
         $mapped = array_map(static function ($value) use ($iter, $previousKeys) {
-            if ($value['status'] === 'deleted') {
-                if ($previousKeys === '') {
-                    return "Property '{$value['key']}' was removed";
-                }
-                $currentPath = "$previousKeys.{$value['key']}";
-                return "Property '$currentPath' was removed";
-            }
 
-            if ($value['status'] === 'added') {
-                if ($value['type'] === 'node') {
-                    if ($previousKeys === '') {
-                        return "Property '{$value['newKey']}' was added with value: [complex value]";
-                    }
-                    $currentPath = "$previousKeys.{$value['newKey']}";
-                    return "Property '$currentPath' was added with value: [complex value]";
-                }
-                $newValue = toStringWithQuotes($value['newValue']);
+            $currentKeyPath = $previousKeys === '' ? $value['key'] : "$previousKeys.{$value['key']}";
 
-                if ($previousKeys === '') {
-                    return "Property '{$value['newKey']}' was added with value: $newValue";
-                }
-                $currentPath = "$previousKeys.{$value['newKey']}";
-                return "Property '$currentPath' was added with value: $newValue";
-            }
-
-            if ($value['status'] === 'changed') {
-                if (isset($value['oldType'])) {
-                    if ($value['oldType'] === 'node' && $value['newType'] === 'sheet') {
-                        $newValue = toStringWithQuotes($value['newValue']);
-
-                        if ($previousKeys === '') {
-                            return "Property '{$value['key']}' was updated. 
-                            From [complex value] to $newValue";
-                        }
-                        $currentPath = "$previousKeys.{$value['key']}";
-                        return "Property '$currentPath' was updated. From [complex value] to $newValue";
-                    }
-
-                    if ($value['oldType'] === 'sheet' && $value['newType'] === 'node') {
-                        $oldValue = toStringWithQuotes($value['oldValue']);
-
-                        if ($previousKeys === '') {
-                            return "Property '{$value['key']}' was updated. 
-                            From $oldValue to [complex value]";
-                        }
-                        $currentPath = "$previousKeys.{$value['key']}";
-                        return "Property '$currentPath' was updated. From $oldValue to [complex value]";
-                    }
-                }
-
-                if ($value['type'] === 'node') {
-                    if ($previousKeys === '') {
-                        return $iter($value['children'], $value['key']);
-                    }
-                    $currentPath = "$previousKeys.{$value['key']}";
-                    return $iter($value['children'], $currentPath);
-                }
-
-                $oldValue = toStringWithQuotes($value['oldValue']);
-                $newValue = toStringWithQuotes($value['newValue']);
-
-                if ($previousKeys === '') {
-                    return "Property '{$value['key']}' was updated. 
-                    From $oldValue to $newValue";
-                }
-                $currentPath = "$previousKeys.{$value['key']}";
-                return "Property '$currentPath' was updated. From $oldValue to $newValue";
+            switch ($value['status']) {
+                case 'nested':
+                    return $iter($value['value1'], $currentKeyPath);
+                case 'added':
+                    $normalizeValue = getNormalizeValue($value['value1']);
+                    return "Property '$currentKeyPath' was added with value: $normalizeValue";
+                case 'deleted':
+                    return "Property '$currentKeyPath' was removed";
+                case 'changed':
+                    $normalizeValue = getNormalizeValue($value['value1']);
+                    $normalizeValue2 = getNormalizeValue($value['value2']);
+                    return "Property '$currentKeyPath' was updated. From $normalizeValue to $normalizeValue2";
+                case 'unchanged':
+                    break;
+                default:
+                    throw new \Exception("Unknown node status: {$value['status']}");
             }
 
             return null;
@@ -85,10 +42,19 @@ function getOutput(mixed $fileAST): string
     return $iter($fileAST);
 }
 
-function toStringWithQuotes(mixed $value): string
+/**
+ * @param mixed $value
+ * @return string
+ */
+function getNormalizeValue(mixed $value): string
 {
+    if (is_array($value)) {
+        return "[complex value]";
+    }
+
     if (is_string($value)) {
         return "'$value'";
     }
+
     return strtolower(trim(var_export($value, true), "'"));
 }

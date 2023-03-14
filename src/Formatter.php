@@ -5,7 +5,7 @@ namespace Differ\Formatter;
 use Exception;
 
 use function Differ\Formatters\Stylish\getStylishOutput as getStylishOutput;
-use function Differ\Formatters\Plain\getOutput as getPlainOutput;
+use function Differ\Formatters\Plain\getPlainOutput as getPlainOutput;
 use function Differ\Formatters\Json\getOutput as getJsonOutput;
 
 /**

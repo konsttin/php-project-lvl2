@@ -52,7 +52,6 @@ function makeAST(mixed $decodedFirstFile, mixed $decodedSecondFile): mixed
             'key' => $key,
             'value1' => $value1,
             'value2' => null];
-
     }, array: $sortedKeys);
 }
 
@@ -64,10 +63,6 @@ function getNestedNode($content)
 {
     $iter = static function ($content) use (&$iter) {
         if (!is_array($content)) {
-//            if ($content === null) {
-//                return 'null';
-//            }
-//            return trim(var_export($content, true), "'");
             return $content;
         }
 
