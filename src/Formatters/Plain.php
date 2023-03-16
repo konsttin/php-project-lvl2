@@ -12,24 +12,26 @@ function getPlainOutput(mixed $fileAST): string
     $iter = static function (array $node, string $previousKeys = '') use (&$iter) {
         $mapped = array_map(static function ($value) use ($iter, $previousKeys) {
 
-            $currentKeyPath = $previousKeys === '' ? $value['key'] : "$previousKeys.{$value['key']}";
+            ['status' => $status, 'key' => $key, 'value1' => $value1, 'value2' => $value2] = $value;
 
-            switch ($value['status']) {
+            $currentKeyPath = $previousKeys === '' ? $key : "$previousKeys.$key";
+
+            switch ($status) {
                 case 'nested':
-                    return $iter($value['value1'], $currentKeyPath);
+                    return $iter($value1, $currentKeyPath);
                 case 'added':
-                    $normalizeValue = getNormalizeValue($value['value1']);
+                    $normalizeValue = getNormalizeValue($value1);
                     return "Property '$currentKeyPath' was added with value: $normalizeValue";
                 case 'deleted':
                     return "Property '$currentKeyPath' was removed";
                 case 'changed':
-                    $normalizeValue = getNormalizeValue($value['value1']);
-                    $normalizeValue2 = getNormalizeValue($value['value2']);
+                    $normalizeValue = getNormalizeValue($value1);
+                    $normalizeValue2 = getNormalizeValue($value2);
                     return "Property '$currentKeyPath' was updated. From $normalizeValue to $normalizeValue2";
                 case 'unchanged':
                     break;
                 default:
-                    throw new \Exception("Unknown node status: {$value['status']}");
+                    throw new \Exception("Unknown node status: {$status}");
             }
 
             return null;

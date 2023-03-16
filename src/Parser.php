@@ -6,18 +6,9 @@ use Symfony\Component\Yaml\Yaml;
 use Exception;
 
 /**
- * @throws \JsonException
- * @throws Exception
- */
-function getDecodedFile(string $fullFilePath): mixed
-{
-    $contentOfFile = getFileContent($fullFilePath);
-    $extension = getFileExtension($fullFilePath);
-
-    return parseFile($contentOfFile, $extension);
-}
-
-/**
+ * @param string $contentOfFile
+ * @param string $extensionFile
+ * @return mixed
  * @throws \JsonException
  * @throws Exception
  */
@@ -29,8 +20,7 @@ function parseFile(string $contentOfFile, string $extensionFile): mixed
             break;
         case 'yaml':
         case 'yml':
-            $stdClass = Yaml::parse($contentOfFile, 1);
-            $decodedFile = (array)$stdClass;
+            $decodedFile = Yaml::parse($contentOfFile);
             break;
         default:
             throw new Exception('Unexpected extension');
@@ -39,6 +29,8 @@ function parseFile(string $contentOfFile, string $extensionFile): mixed
 }
 
 /**
+ * @param string $filePath
+ * @return string
  * @throws Exception
  */
 function getFileContent(string $filePath): string
@@ -50,6 +42,10 @@ function getFileContent(string $filePath): string
     return $contentOfFile;
 }
 
+/**
+ * @param string $filePath
+ * @return string
+ */
 function getFileExtension(string $filePath): string
 {
     return pathinfo($filePath, PATHINFO_EXTENSION);
