@@ -30,6 +30,7 @@ function makeAST(mixed $decodedFirstFile, mixed $decodedSecondFile): mixed
         if (!array_key_exists($key, $decodedFirstFile)) {
             return ['status' => 'added',
                 'key' => $key,
+//                'value1' => $value2,
                 'value1' => getNestedNode($value2),
                 'value2' => null];
         }
@@ -37,6 +38,7 @@ function makeAST(mixed $decodedFirstFile, mixed $decodedSecondFile): mixed
         if (!array_key_exists($key, $decodedSecondFile)) {
             return ['status' => 'deleted',
                 'key' => $key,
+//                'value1' => $value1,
                 'value1' => getNestedNode($value1),
                 'value2' => null];
         }
@@ -44,6 +46,8 @@ function makeAST(mixed $decodedFirstFile, mixed $decodedSecondFile): mixed
         if ($value1 !== $value2) {
             return ['status' => 'changed',
                 'key' => $key,
+//                'value1' => $value1,
+//                'value2' => $value2];
                 'value1' => getNestedNode($value1),
                 'value2' => getNestedNode($value2)];
         }
@@ -59,7 +63,7 @@ function makeAST(mixed $decodedFirstFile, mixed $decodedSecondFile): mixed
  * @param mixed $content
  * @return mixed
  */
-function getNestedNode($content)
+function getNestedNode(mixed $content): mixed
 {
     $iter = static function ($content) use (&$iter) {
         if (!is_array($content)) {
@@ -68,7 +72,7 @@ function getNestedNode($content)
 
         $keys = array_keys($content);
         return array_map(static function ($key) use ($content, $iter) {
-            $value = (is_array($content[$key])) ? $iter($content[$key]) : $content[$key];
+            $value = is_array($content[$key]) ? $iter($content[$key]) : $content[$key];
             return ['status' => 'unchanged',
                 'key' => $key,
                 'value1' => $value,
