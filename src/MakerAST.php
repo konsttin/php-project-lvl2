@@ -30,26 +30,26 @@ function makeAST(mixed $decodedFirstFile, mixed $decodedSecondFile): mixed
         if (!array_key_exists($key, $decodedFirstFile)) {
             return ['status' => 'added',
                 'key' => $key,
-//                'value1' => $value2,
-                'value1' => getNestedNode($value2),
+                'value1' => $value2,
+//                'value1' => getNestedNode($value2),
                 'value2' => null];
         }
 
         if (!array_key_exists($key, $decodedSecondFile)) {
             return ['status' => 'deleted',
                 'key' => $key,
-//                'value1' => $value1,
-                'value1' => getNestedNode($value1),
+                'value1' => $value1,
+//                'value1' => getNestedNode($value1),
                 'value2' => null];
         }
 
         if ($value1 !== $value2) {
             return ['status' => 'changed',
                 'key' => $key,
-//                'value1' => $value1,
-//                'value2' => $value2];
-                'value1' => getNestedNode($value1),
-                'value2' => getNestedNode($value2)];
+                'value1' => $value1,
+                'value2' => $value2];
+//                'value1' => getNestedNode($value1),
+//                'value2' => getNestedNode($value2)];
         }
 
         return ['status' => 'unchanged',
