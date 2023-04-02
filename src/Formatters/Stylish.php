@@ -11,7 +11,6 @@ namespace Differ\Formatters\Stylish;
 function getStylishOutput(mixed $fileAST, int $depth = 0): string
 {
     $indent = str_repeat('    ', $depth);
-//    print_r($fileAST);
 
     $lines = array_map(static function ($node) use ($indent, $depth) {
 
@@ -58,9 +57,9 @@ function stringify(mixed $value, int $spacesCount = 1): mixed
             return toString($currentValue);
         }
 
-        $indentSize = $depth * $spacesCount;
+        $indentSize = $depth * $spacesCount + 1;
         $currentIndent = str_repeat($replacer, $indentSize);
-        $bracketIndent = str_repeat($replacer, $indentSize);
+        $bracketIndent = str_repeat($replacer, $indentSize - 1);
 
         $lines = array_map(
             static fn($key, $val) => "{$currentIndent}{$key}: {$iter($val, $depth + 1)}",
@@ -87,32 +86,3 @@ function toString(mixed $value): string
 
     return strtolower(trim(var_export($value, true), "'"));
 }
-
-///**
-// * @param mixed $content
-// * @return mixed
-// */
-//function getNestedNode(mixed $content): mixed
-//{
-//    $iter = static function ($content) use (&$iter) {
-//
-//        if (!is_array($content)) {
-//            return $content;
-//        }
-//
-//        if (array_key_exists('status', $content)) {
-//            return $content;
-//        }
-//
-//        $keys = array_keys($content);
-//        return array_map(static function ($key) use ($content, $iter) {
-//            $value = is_array($content[$key]) ? $iter($content[$key]) : $content[$key];
-//            return ['status' => 'unchanged',
-//                'key' => $key,
-//                'value1' => $value,
-//                'value2' => null];
-//        }, $keys);
-//    };
-//
-//    return $iter($content);
-//}
