@@ -51,6 +51,7 @@ function stringify(mixed $value, int $spacesCount = 1): mixed
     }
 
     $iter = static function ($currentValue, $depth) use (&$iter, $spacesCount) {
+
         $replacer = '    ';
 
         if (!is_array($currentValue)) {
