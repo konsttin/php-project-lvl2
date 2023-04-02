@@ -58,17 +58,16 @@ function stringify(mixed $value, int $spacesCount = 1): mixed
             return toString($currentValue);
         }
 
-        $indentSize = $depth * $spacesCount + 1;
-        $currentIndent = str_repeat($replacer, $indentSize);
-        $bracketIndent = str_repeat($replacer, $indentSize - 1);
+        $indentSize = $depth * $spacesCount;
+        $indent = str_repeat($replacer, $indentSize);
 
         $lines = array_map(
-            static fn($key, $val) => "{$currentIndent}{$key}: {$iter($val, $depth + 1)}",
+            static fn($key, $val) => "$indent    $key: {$iter($val, $depth + 1)}",
             array_keys($currentValue),
             $currentValue
         );
 
-        $result = ['{', ...$lines, "{$bracketIndent}}"];
+        $result = ['{', ...$lines, "$indent}"];
 
         return implode("\n", $result);
     };
