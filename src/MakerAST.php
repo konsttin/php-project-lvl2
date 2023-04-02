@@ -59,26 +59,26 @@ function makeAST(mixed $decodedFirstFile, mixed $decodedSecondFile): mixed
     }, array: $sortedKeys);
 }
 
-/**
- * @param mixed $content
- * @return mixed
- */
-function getNestedNode(mixed $content): mixed
-{
-    $iter = static function ($content) use (&$iter) {
-        if (!is_array($content)) {
-            return $content;
-        }
-
-        $keys = array_keys($content);
-        return array_map(static function ($key) use ($content, $iter) {
-            $value = is_array($content[$key]) ? $iter($content[$key]) : $content[$key];
-            return ['status' => 'unchanged',
-                'key' => $key,
-                'value1' => $value,
-                'value2' => null];
-        }, $keys);
-    };
-
-    return $iter($content);
-}
+///**
+// * @param mixed $content
+// * @return mixed
+// */
+//function getNestedNode(mixed $content): mixed
+//{
+//    $iter = static function ($content) use (&$iter) {
+//        if (!is_array($content)) {
+//            return $content;
+//        }
+//
+//        $keys = array_keys($content);
+//        return array_map(static function ($key) use ($content, $iter) {
+//            $value = is_array($content[$key]) ? $iter($content[$key]) : $content[$key];
+//            return ['status' => 'unchanged',
+//                'key' => $key,
+//                'value1' => $value,
+//                'value2' => null];
+//        }, $keys);
+//    };
+//
+//    return $iter($content);
+//}

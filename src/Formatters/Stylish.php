@@ -15,15 +15,14 @@ function getStylishOutput(mixed $fileAST, int $depth = 0): string
 
     $lines = array_map(static function ($node) use ($indent, $depth) {
 
-        $node = getNestedNode($node);
-
         ['status' => $status, 'key' => $key, 'value1' => $value, 'value2' => $value2] = $node;
 
-        $normalizeValue1 = is_array($value) ? getStylishOutput($value, $depth + 1) : toString($value);
+        $normalizeValue1 = is_array($value) ? stringify($value, $depth + 1) : toString($value);
 
         switch ($status) {
             case 'nested':
             case 'unchanged':
+                $normalizeValue1 = is_array($value) ? getStylishOutput($value, $depth + 1) : toString($value);
                 return "$indent    $key: $normalizeValue1";
             case 'added':
                 return "$indent  + $key: $normalizeValue1";
@@ -41,59 +40,18 @@ function getStylishOutput(mixed $fileAST, int $depth = 0): string
 }
 
 /**
- * @throws \Exception
- */
-function toString(mixed $value, int $depth = 0): string
-{
-    if (is_string($value)) {
-        return $value;
-    }
-
-    return strtolower(trim(var_export($value, true), "'"));
-}
-
-/**
- * @param mixed $content
- * @return mixed
- */
-function getNestedNode(mixed $content): mixed
-{
-    $iter = static function ($content) use (&$iter) {
-
-        if (!is_array($content)) {
-            return $content;
-        }
-
-        if (array_key_exists('status', $content)) {
-            return $content;
-        }
-
-        $keys = array_keys($content);
-        return array_map(static function ($key) use ($content, $iter) {
-            $value = is_array($content[$key]) ? $iter($content[$key]) : $content[$key];
-            return ['status' => 'unchanged',
-                'key' => $key,
-                'value1' => $value,
-                'value2' => null];
-        }, $keys);
-    };
-
-    return $iter($content);
-}
-
-/**
  * @param mixed $value
  * @param int $spacesCount
- * @return string
+ * @return mixed
  * @throws \Exception
  */
-function stringify(mixed $value, int $spacesCount = 1): string
+function stringify(mixed $value, int $spacesCount = 1): mixed
 {
-    if (isset($value['status'])) {
+    if (array_key_exists('status', $value)) {
         return $value;
     }
 
-    $iter = function ($currentValue, $depth) use (&$iter, $spacesCount) {
+    $iter = static function ($currentValue, $depth) use (&$iter, $spacesCount) {
         $replacer = '    ';
 
         if (!is_array($currentValue)) {
@@ -102,10 +60,10 @@ function stringify(mixed $value, int $spacesCount = 1): string
 
         $indentSize = $depth * $spacesCount;
         $currentIndent = str_repeat($replacer, $indentSize);
-        $bracketIndent = str_repeat($replacer, $indentSize - $spacesCount);
+        $bracketIndent = str_repeat($replacer, $indentSize);
 
         $lines = array_map(
-            fn($key, $val) => "{$currentIndent}{$key}: {$iter($val, $depth + 1)}",
+            static fn($key, $val) => "{$currentIndent}{$key}: {$iter($val, $depth + 1)}",
             array_keys($currentValue),
             $currentValue
         );
@@ -117,3 +75,44 @@ function stringify(mixed $value, int $spacesCount = 1): string
 
     return $iter($value, 1);
 }
+
+/**
+ * @throws \Exception
+ */
+function toString(mixed $value): string
+{
+    if (is_string($value)) {
+        return $value;
+    }
+
+    return strtolower(trim(var_export($value, true), "'"));
+}
+
+///**
+// * @param mixed $content
+// * @return mixed
+// */
+//function getNestedNode(mixed $content): mixed
+//{
+//    $iter = static function ($content) use (&$iter) {
+//
+//        if (!is_array($content)) {
+//            return $content;
+//        }
+//
+//        if (array_key_exists('status', $content)) {
+//            return $content;
+//        }
+//
+//        $keys = array_keys($content);
+//        return array_map(static function ($key) use ($content, $iter) {
+//            $value = is_array($content[$key]) ? $iter($content[$key]) : $content[$key];
+//            return ['status' => 'unchanged',
+//                'key' => $key,
+//                'value1' => $value,
+//                'value2' => null];
+//        }, $keys);
+//    };
+//
+//    return $iter($content);
+//}
