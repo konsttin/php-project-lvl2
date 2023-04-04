@@ -32,8 +32,8 @@ function getStylishOutput(mixed $fileAST, int $depth = 0): string
             case 'changed':
                 $normalizeValue2 = is_array($value2) ? getStylishOutput($value2, $depth + 1) : toString($value2);
                 return "$indent  - $key: $normalizeValue1\n$indent  + $key: $normalizeValue2";
-            default:
-                throw new Exception("Unknown node status: $status");
+//            default:
+//                throw new Exception("Unknown node status: $status");
         }
     }, $fileAST);
     $result = ["{", ...$lines, "$indent}"];
@@ -44,7 +44,6 @@ function getStylishOutput(mixed $fileAST, int $depth = 0): string
  * @param mixed $value
  * @param int $spacesCount
  * @return mixed
- * @throws Exception
  */
 function stringify(mixed $value, int $spacesCount = 1): mixed
 {
@@ -78,7 +77,8 @@ function stringify(mixed $value, int $spacesCount = 1): mixed
 }
 
 /**
- * @throws Exception
+ * @param mixed $value
+ * @return string
  */
 function toString(mixed $value): string
 {
