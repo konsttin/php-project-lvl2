@@ -2,13 +2,13 @@
 
 namespace Differ\Formatters\Stylish;
 
-use RuntimeException;
+use Exception;
 
 /**
  * @param array<mixed> $fileAST
  * @param int $depth
  * @return string
- * @throws RuntimeException
+ * @throws Exception
  */
 function getStylishOutput(mixed $fileAST, int $depth = 0): string
 {
@@ -33,7 +33,7 @@ function getStylishOutput(mixed $fileAST, int $depth = 0): string
                 $normalizeValue2 = is_array($value2) ? getStylishOutput($value2, $depth + 1) : toString($value2);
                 return "$indent  - $key: $normalizeValue1\n$indent  + $key: $normalizeValue2";
             default:
-                throw new RuntimeException("Unknown node status: $status");
+                throw new Exception("Unknown node status: $status");
         }
     }, $fileAST);
     $result = ["{", ...$lines, "$indent}"];
