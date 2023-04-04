@@ -33,7 +33,8 @@ function getStylishOutput(mixed $fileAST, int $depth = 0): string
                 $normalizeValue2 = is_array($value2) ? getStylishOutput($value2, $depth + 1) : toString($value2);
                 return "$indent  - $key: $normalizeValue1\n$indent  + $key: $normalizeValue2";
             default:
-                throw new Exception("Unknown node status: $status");
+                $nodePrint = json_encode($node, JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT);
+                throw new Exception("Unknown node status: $nodePrint");
         }
     }, $fileAST);
     $result = ["{", ...$lines, "$indent}"];
