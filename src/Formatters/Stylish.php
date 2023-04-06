@@ -12,7 +12,7 @@ use Exception;
  */
 function getStylishOutput(mixed $fileAST, int $depth = 0): string
 {
-    print_r($fileAST);
+//    print_r($fileAST);
 
     $indent = str_repeat('    ', $depth);
 
