@@ -18,21 +18,21 @@ function getStylishOutput(mixed $fileAST, int $depth = 0): string
 
         ['status' => $status, 'key' => $key, 'value1' => $value, 'value2' => $value2] = $node;
 
-        $normalizeValue1 = is_array($value) ? stringify($value, $depth + 1) : toString($value);
-        $normalizeValue2 = is_array($value2) ? stringify($value2, $depth + 1) : toString($value2);
+        $stringifyValue1 = is_array($value) ? stringify($value, $depth + 1) : toString($value);
+        $stringifyValue2 = is_array($value2) ? stringify($value2, $depth + 1) : toString($value2);
 
         switch ($status) {
             case 'nested':
                 $normalizeValue1 = is_array($value) ? getStylishOutput($value, $depth + 1) : toString($value);
                 return "$indent    $key: $normalizeValue1";
             case 'unchanged':
-                return "$indent    $key: $normalizeValue1";
+                return "$indent    $key: $stringifyValue1";
             case 'added':
-                return "$indent  + $key: $normalizeValue1";
+                return "$indent  + $key: $stringifyValue1";
             case 'deleted':
-                return "$indent  - $key: $normalizeValue1";
+                return "$indent  - $key: $stringifyValue1";
             case 'changed':
-                return "$indent  - $key: $normalizeValue1\n$indent  + $key: $normalizeValue2";
+                return "$indent  - $key: $stringifyValue1\n$indent  + $key: $stringifyValue2";
             default:
                 throw new Exception("Unknown node status: $status");
         }
