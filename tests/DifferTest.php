@@ -29,14 +29,10 @@ class DifferTest extends TestCase
     public function additionProvider(): mixed
     {
         return [
-//            'jsonStylish' => ['resultStylish', 'file1.json', 'file2.json', 'stylish'],
-//            'ymlStylish' => ['resultStylish', 'file1.yml', 'file2.yaml', 'stylish'],
-//            'jsonPlain' => ['resultPlain', 'file1.json', 'file2.json', 'plain'],
-//            'ymlPlain' => ['resultPlain', 'file1.yml', 'file2.yaml', 'plain'],
-            'HxlJsonStylish' => ['diff.stylish', 'HxlFile1.json', 'HxlFile2.json', 'stylish'],
-            'HxlYmlStylish' => ['diff.stylish', 'HxlFile1.yaml', 'HxlFile2.yaml', 'stylish'],
-            'HxlJsonPlain' => ['diff.plain', 'HxlFile1.json', 'HxlFile2.json', 'plain'],
-            'HxlYmlPlain' => ['diff.plain', 'HxlFile1.yaml', 'HxlFile2.yaml', 'plain'],
+            'jsonStylish' => ['resultStylish', 'file1.json', 'file2.json', 'stylish'],
+            'ymlStylish' => ['resultStylish', 'file1.yml', 'file2.yaml', 'stylish'],
+            'jsonPlain' => ['resultPlain', 'file1.json', 'file2.json', 'plain'],
+            'ymlPlain' => ['resultPlain', 'file1.yml', 'file2.yaml', 'plain']
         ];
     }
 }
