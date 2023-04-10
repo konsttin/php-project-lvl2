@@ -11,7 +11,6 @@ function getPlainOutput(mixed $fileAST): string
 {
     $iter = static function (array $node, string $previousKeys = '') use (&$iter) {
         $mapped = array_map(static function ($value) use ($iter, $previousKeys) {
-
             ['status' => $status, 'key' => $key, 'value1' => $value1, 'value2' => $value2] = $value;
 
             $currentKeyPath = $previousKeys === '' ? $key : "$previousKeys.$key";
@@ -33,7 +32,6 @@ function getPlainOutput(mixed $fileAST): string
                 default:
                     throw new \Exception("Unknown node status: {$status}");
             }
-
             return null;
         }, $node);
 
