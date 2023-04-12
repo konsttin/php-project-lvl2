@@ -44,23 +44,20 @@ function stylish(mixed $fileAST, int $depth = 0): string
 /**
  * @param mixed $value
  * @param int $spacesCount
- * @return mixed
+ * @return string
  */
-function stringify(mixed $value, int $spacesCount = 1): mixed
+function stringify(mixed $value, int $spacesCount = 1): string
 {
     $iter = static function ($currentValue, $depth) use (&$iter, $spacesCount) {
-
-        $replacer = '    ';
-
         if (!is_array($currentValue)) {
-            if (is_bool($currentValue)) {
-                return strtolower(trim(var_export($currentValue, true), "'"));
+            if ($currentValue === null) {
+                return 'null';
             }
             return trim(var_export($currentValue, true), "'");
         }
 
         $indentSize = $depth * $spacesCount;
-        $indent = str_repeat($replacer, $indentSize);
+        $indent = str_repeat('    ', $indentSize);
 
         $lines = array_map(
             static fn($key, $val) => "$indent    $key: {$iter($val, $depth + 1)}",
