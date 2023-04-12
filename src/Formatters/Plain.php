@@ -56,5 +56,9 @@ function getNormalizedValue(mixed $value): string
         return "'$value'";
     }
 
+    if ($value === 'null') {
+        return $value;
+    }
+
     return trim(var_export($value, true), "'");
 }
