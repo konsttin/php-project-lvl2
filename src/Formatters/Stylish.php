@@ -53,7 +53,10 @@ function stringify(mixed $value, int $spacesCount = 1): mixed
         $replacer = '    ';
 
         if (!is_array($currentValue)) {
-            return strtolower(trim(var_export($currentValue, true), "'"));
+            if (is_bool($currentValue)) {
+                return strtolower(trim(var_export($currentValue, true), "'"));
+            }
+            return trim(var_export($currentValue, true), "'");
         }
 
         $indentSize = $depth * $spacesCount;
