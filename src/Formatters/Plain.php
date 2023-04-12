@@ -48,16 +48,16 @@ function plain(mixed $fileAST): string
  */
 function getNormalizedValue(mixed $value): string
 {
+    if ($value === 'null') {
+        return 'null';
+    }
+
     if (is_array($value)) {
         return "[complex value]";
     }
 
     if (is_string($value)) {
         return "'$value'";
-    }
-
-    if ($value === 'null') {
-        return $value;
     }
 
     return trim(var_export($value, true), "'");
