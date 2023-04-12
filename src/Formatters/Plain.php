@@ -48,7 +48,7 @@ function plain(mixed $fileAST): string
  */
 function getNormalizedValue(mixed $value): string
 {
-    if ($value === 'null') {
+    if ($value === null) {
         return 'null';
     }
 
