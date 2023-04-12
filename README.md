@@ -14,6 +14,7 @@ Utility compares json or yml files. Output can be displayed in formats:
 ## Requirements
 * PHP >= 8.1
 * [Composer](https://getcomposer.org/)
+* [Make](https://www.gnu.org/software/make/manual/make.html)
 
 ## Install
 ```sh
