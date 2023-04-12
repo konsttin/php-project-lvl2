@@ -4,9 +4,9 @@ namespace Differ\Formatter;
 
 use Exception;
 
-use function Differ\Formatters\Stylish\getStylishOutput;
-use function Differ\Formatters\Plain\getPlainOutput;
-use function Differ\Formatters\Json\getJsonOutput;
+use function Differ\Formatters\Stylish\stylish;
+use function Differ\Formatters\Plain\plain;
+use function Differ\Formatters\Json\json;
 
 /**
  * @throws \JsonException
@@ -15,9 +15,9 @@ use function Differ\Formatters\Json\getJsonOutput;
 function getFormatOutput(string $formatName, mixed $fileAST): string
 {
     return match ($formatName) {
-        'stylish' => getStylishOutput($fileAST),
-        'plain' => getPlainOutput($fileAST),
-        'json' => getJsonOutput($fileAST),
+        'stylish' => stylish($fileAST),
+        'plain' => plain($fileAST),
+        'json' => json($fileAST),
         default => throw new Exception('Unexpected format name')
     };
 }

@@ -2,10 +2,10 @@
 
 namespace Differ\Differ;
 
+use Exception;
+
 use function Differ\Formatter\getFormatOutput;
 use function Differ\MakerAST\makeAST;
-use function Differ\Parser\getFileContent;
-use function Differ\Parser\getFileExtension;
 use function Differ\Parser\parseFile;
 
 /**
@@ -14,7 +14,7 @@ use function Differ\Parser\parseFile;
  * @param string $format
  * @return string
  * @throws \JsonException
- * @throws \Exception
+ * @throws Exception
  */
 function genDiff(string $firstFilePath, string $secondFilePath, string $format = 'stylish'): string
 {
@@ -29,7 +29,7 @@ function genDiff(string $firstFilePath, string $secondFilePath, string $format =
  * @param string $fullFilePath
  * @return mixed
  * @throws \JsonException
- * @throws \Exception
+ * @throws Exception
  */
 function getDecodedFile(string $fullFilePath): mixed
 {
@@ -37,4 +37,27 @@ function getDecodedFile(string $fullFilePath): mixed
     $extension = getFileExtension($fullFilePath);
 
     return parseFile($contentOfFile, $extension);
+}
+
+/**
+ * @param string $filePath
+ * @return string
+ * @throws Exception
+ */
+function getFileContent(string $filePath): string
+{
+    $contentOfFile = file_get_contents($filePath);
+    if ($contentOfFile === false) {
+        throw new Exception('File is empty');
+    }
+    return $contentOfFile;
+}
+
+/**
+ * @param string $filePath
+ * @return string
+ */
+function getFileExtension(string $filePath): string
+{
+    return pathinfo($filePath, PATHINFO_EXTENSION);
 }

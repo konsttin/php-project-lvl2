@@ -7,7 +7,7 @@ namespace Differ\Formatters\Plain;
  * @return string
  * @throws \Exception
  */
-function getPlainOutput(mixed $fileAST): string
+function plain(mixed $fileAST): string
 {
     $iter = static function (array $node, string $previousKeys = '') use (&$iter) {
         $mapped = array_map(static function ($value) use ($iter, $previousKeys) {
@@ -19,13 +19,13 @@ function getPlainOutput(mixed $fileAST): string
                 case 'nested':
                     return $iter($value1, $currentKeyPath);
                 case 'added':
-                    $normalizeValue = getNormalizeValue($value1);
+                    $normalizeValue = getNormalizedValue($value1);
                     return "Property '$currentKeyPath' was added with value: $normalizeValue";
                 case 'deleted':
                     return "Property '$currentKeyPath' was removed";
                 case 'changed':
-                    $normalizeValue = getNormalizeValue($value1);
-                    $normalizeValue2 = getNormalizeValue($value2);
+                    $normalizeValue = getNormalizedValue($value1);
+                    $normalizeValue2 = getNormalizedValue($value2);
                     return "Property '$currentKeyPath' was updated. From $normalizeValue to $normalizeValue2";
                 case 'unchanged':
                     break;
@@ -46,7 +46,7 @@ function getPlainOutput(mixed $fileAST): string
  * @param mixed $value
  * @return string
  */
-function getNormalizeValue(mixed $value): string
+function getNormalizedValue(mixed $value): string
 {
     if (is_array($value)) {
         return "[complex value]";
@@ -56,5 +56,5 @@ function getNormalizeValue(mixed $value): string
         return "'$value'";
     }
 
-    return strtolower(trim(var_export($value, true), "'"));
+    return trim(var_export($value, true), "'");
 }

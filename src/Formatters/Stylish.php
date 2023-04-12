@@ -10,7 +10,7 @@ use Exception;
  * @return string
  * @throws Exception
  */
-function getStylishOutput(mixed $fileAST, int $depth = 0): string
+function stylish(mixed $fileAST, int $depth = 0): string
 {
     $indent = str_repeat('    ', $depth);
 
@@ -18,11 +18,11 @@ function getStylishOutput(mixed $fileAST, int $depth = 0): string
 
         ['status' => $status, 'key' => $key, 'value1' => $value, 'value2' => $value2] = $node;
 
-        $stringifyValue1 = is_array($value) ? stringify($value, $depth + 1) : toString($value);
+        $stringifyValue1 = stringify($value, $depth + 1);
 
         switch ($status) {
             case 'nested':
-                $nestedValue1 = is_array($value) ? getStylishOutput($value, $depth + 1) : toString($value);
+                $nestedValue1 = is_array($value) ? stylish($value, $depth + 1) : stringify($value);
                 return "$indent    $key: $nestedValue1";
             case 'unchanged':
                 return "$indent    $key: $stringifyValue1";
@@ -31,7 +31,7 @@ function getStylishOutput(mixed $fileAST, int $depth = 0): string
             case 'deleted':
                 return "$indent  - $key: $stringifyValue1";
             case 'changed':
-                $stringifyValue2 = is_array($value2) ? stringify($value2, $depth + 1) : toString($value2);
+                $stringifyValue2 = stringify($value2, $depth + 1);
                 return "$indent  - $key: $stringifyValue1\n$indent  + $key: $stringifyValue2";
             default:
                 throw new Exception("Unknown node status: $status");
@@ -48,16 +48,12 @@ function getStylishOutput(mixed $fileAST, int $depth = 0): string
  */
 function stringify(mixed $value, int $spacesCount = 1): mixed
 {
-    if (array_key_exists('status', $value)) {
-        return $value;
-    }
-
     $iter = static function ($currentValue, $depth) use (&$iter, $spacesCount) {
 
         $replacer = '    ';
 
         if (!is_array($currentValue)) {
-            return toString($currentValue);
+            return trim(var_export($currentValue, true), "'");
         }
 
         $indentSize = $depth * $spacesCount;
@@ -75,17 +71,4 @@ function stringify(mixed $value, int $spacesCount = 1): mixed
     };
 
     return $iter($value, 1);
-}
-
-/**
- * @param mixed $value
- * @return string
- */
-function toString(mixed $value): string
-{
-    if (is_string($value)) {
-        return $value;
-    }
-
-    return strtolower(trim(var_export($value, true), "'"));
 }
