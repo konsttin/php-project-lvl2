@@ -10,7 +10,7 @@ use Exception;
  * @return string
  * @throws Exception
  */
-function getFormatStylish(mixed $fileAST, int $depth = 0): string
+function getFormatValue(mixed $fileAST, int $depth = 0): string
 {
     $indent = str_repeat('    ', $depth);
 
@@ -22,7 +22,7 @@ function getFormatStylish(mixed $fileAST, int $depth = 0): string
 
         switch ($status) {
             case 'nested':
-                $nestedValue1 = is_array($value) ? getFormatStylish($value, $depth + 1) : stringify($value);
+                $nestedValue1 = is_array($value) ? getFormatValue($value, $depth + 1) : stringify($value);
                 return "$indent    $key: $nestedValue1";
             case 'unchanged':
                 return "$indent    $key: $stringifyValue1";

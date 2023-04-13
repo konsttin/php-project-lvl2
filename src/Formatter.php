@@ -4,9 +4,9 @@ namespace Differ\Formatter;
 
 use Exception;
 
-use function Differ\Formatters\Stylish\getFormatStylish;
-use function Differ\Formatters\Plain\getFormatPlain;
-use function Differ\Formatters\Json\getFormatJson;
+use function Differ\Formatters\Stylish\getFormatValue as getFormatStylish;
+use function Differ\Formatters\Plain\getFormatValue as getFormatPlain;
+use function Differ\Formatters\Json\getFormatValue as getFormatJson;
 
 /**
  * @throws \JsonException
