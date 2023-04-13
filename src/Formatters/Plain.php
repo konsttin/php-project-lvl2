@@ -7,7 +7,7 @@ namespace Differ\Formatters\Plain;
  * @return string
  * @throws \Exception
  */
-function plain(mixed $fileAST): string
+function getFormatPlain(mixed $fileAST): string
 {
     $iter = static function (array $node, string $previousKeys = '') use (&$iter) {
         $mapped = array_map(static function ($value) use ($iter, $previousKeys) {
